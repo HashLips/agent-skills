@@ -1,1 +1,7 @@
 skills/deb-art/
+
+.cursor/
+
+output/
+
+.DS_Store
