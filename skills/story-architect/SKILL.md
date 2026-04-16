@@ -72,9 +72,9 @@ See full canon behavior in [references/canon-rules.md](references/canon-rules.md
 
 ## Reference Index
 
-- [references/schema.md](references/schema.md)
-- [references/categories.md](references/categories.md)
-- [references/naming-conventions.md](references/naming-conventions.md)
-- [references/file-templates.md](references/file-templates.md)
-- [references/canon-rules.md](references/canon-rules.md)
-- [references/hierarchy.md](references/hierarchy.md)
+- Frontmatter schema and required fields for lore entries: [references/schema.md](references/schema.md)
+- Category definitions and classification decision guide: [references/categories.md](references/categories.md)
+- Naming conventions for files and entities (kebab case rules): [references/naming-conventions.md](references/naming-conventions.md)
+- Category-specific file templates for different concept types: [references/file-templates.md](references/file-templates.md)
+- Canon rules, status values, and conflict-handling behavior: [references/canon-rules.md](references/canon-rules.md)
+- Folder hierarchy and placement rules for lore files: [references/hierarchy.md](references/hierarchy.md)

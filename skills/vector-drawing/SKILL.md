@@ -38,19 +38,19 @@ For most vector art, this subset is enough:
 
 Master these before reaching for shapes, text, or filters.
 
-## Skill flow (reference order)
+## Reference Index (skill flow)
 
-When generating or editing SVG artwork, apply concepts in this order. Read the referenced file when you need that topic.
+When generating or editing SVG artwork, apply concepts in this order and read the referenced file when you need that topic.
 
-1. **SVG structure** → [reference/structure.md](reference/structure.md) — `svg`, `viewBox`, document structure
-2. **SVG shapes** → [reference/shapes.md](reference/shapes.md) — rectangles, circles, lines, etc.
-3. **SVG paths** → [reference/paths.md](reference/paths.md) — `path` and path commands
-4. **SVG styling** → [reference/styling.md](reference/styling.md) — `fill`, `stroke`, painting
-5. **SVG grouping** → [reference/grouping.md](reference/grouping.md) — `g`, hierarchy, inheritance
-6. **SVG transforms** → [reference/transforms.md](reference/transforms.md) — `transform`
-7. **SVG clipping and masking** → [reference/clipping-masking.md](reference/clipping-masking.md) — `clipPath`, `mask`
-8. **SVG gradients** → [reference/gradients.md](reference/gradients.md) — gradients (and patterns)
-9. **SVG composition** → [reference/composition.md](reference/composition.md) — `defs`, `use`, reuse
+1. Document structure and `svg`/`viewBox` basics: [reference/structure.md](reference/structure.md)
+2. Basic shapes (rectangles, circles, lines, etc.): [reference/shapes.md](reference/shapes.md)
+3. Paths and path commands for arbitrary shapes: [reference/paths.md](reference/paths.md)
+4. Styling (`fill`, `stroke`, painting rules): [reference/styling.md](reference/styling.md)
+5. Grouping and hierarchy with `g`: [reference/grouping.md](reference/grouping.md)
+6. Transforms and coordinate manipulation (`transform`): [reference/transforms.md](reference/transforms.md)
+7. Clipping and masking (`clipPath`, `mask`): [reference/clipping-masking.md](reference/clipping-masking.md)
+8. Gradients and patterns: [reference/gradients.md](reference/gradients.md)
+9. Composition, reuse, and `defs`/`use`: [reference/composition.md](reference/composition.md)
 
 ## When to use
 
@@ -63,3 +63,12 @@ When generating or editing SVG artwork, apply concepts in this order. Read the r
 - **Structure first**: use `path`, `g`, `defs` clearly; keep markup readable.
 - **Prefer the core subset** unless the design needs text, filters, or advanced features.
 - **Accessibility**: add `<title>` and `aria-*` where meaning is conveyed by the graphic.
+
+## Output Contract
+
+SVG outputs produced with this skill should:
+
+- render correctly as valid SVG 2 markup
+- be structurally readable (clear grouping, paths, and viewBox usage)
+- rely on the core subset of elements unless advanced features are clearly needed
+- avoid embedding raster images unless explicitly requested
