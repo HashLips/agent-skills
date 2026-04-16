@@ -82,3 +82,16 @@ Avoid by:
 - enforcing inward dependency direction
 - reviewing imports for domain/application independence
 - treating framework details as replaceable outer concerns
+
+---
+
+## 8) Missing Security at Capability Boundaries
+
+Use cases are reachable without consistent authentication or authorization, or untrusted input reaches domain logic unchanged.
+
+Avoid by:
+
+- enforcing the same policy at every entry point into a capability
+- validating and mapping external input at the boundary
+
+See [security.md](security.md) for full guidance.

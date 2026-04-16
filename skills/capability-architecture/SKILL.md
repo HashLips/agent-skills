@@ -1,6 +1,6 @@
 ---
 name: capability-architecture
-description: Design software systems around capabilities, clear boundaries, and layered responsibilities to reduce coupling and improve long-term maintainability. Use when designing new architecture, refactoring for modularity, defining module contracts, or evaluating system structure across frontend, backend, or service-based applications.
+description: Design software systems around capabilities, clear boundaries, and layered responsibilities to reduce coupling and improve long-term maintainability and security at trust boundaries. Use when designing new architecture, refactoring for modularity, defining module contracts, evaluating system structure, or hardening authorization and data handling across frontend, backend, or service-based applications.
 ---
 
 # Capability Architecture
@@ -25,10 +25,11 @@ When designing or refactoring architecture:
 1. Identify business capabilities
 2. Define module boundaries per capability
 3. Establish explicit contracts between modules
-4. Assign responsibilities by layer
-5. Isolate external systems behind adapters
-6. Prevent cross-layer and cross-module leakage
-7. Compose the system from capability modules
+4. Define security and trust boundaries per capability (identity, authorization, sensitive data, validation)
+5. Assign responsibilities by layer
+6. Isolate external systems behind adapters
+7. Prevent cross-layer and cross-module leakage
+8. Compose the system from capability modules
 
 ## Non-Negotiable Rules
 
@@ -38,6 +39,9 @@ When designing or refactoring architecture:
 - Keep infrastructure replaceable through adapters
 - Communicate between modules through contracts only
 - Introduce shared abstractions only after reuse is proven
+- Enforce authorization consistently at capability entry points, not only at one outer transport layer
+- Validate untrusted input at trust boundaries; keep domain and application logic working on safe, explicit inputs
+- Classify sensitive data and secrets; keep secret handling in infrastructure, not in domain rules
 
 ## Output Contract
 
@@ -48,6 +52,7 @@ Architectures produced with this skill should:
 - show explicit layer responsibility split
 - avoid framework/database leakage into domain logic
 - document known anti-pattern risks and mitigations
+- state trust boundaries, authorization expectations, and sensitive data handling per capability where relevant
 
 ## Reference Index
 
@@ -58,6 +63,7 @@ Architectures produced with this skill should:
 - Dependency direction and coupling constraints; read when validating imports and layer isolation: [references/coupling-rules.md](references/coupling-rules.md)
 - Reuse progression strategy; read before extracting shared abstractions: [references/reuse-guidelines.md](references/reuse-guidelines.md)
 - Common failure patterns and mitigations; read during reviews and refactors: [references/anti-patterns.md](references/anti-patterns.md)
+- Security at boundaries (authz, validation, secrets, sensitive data); read when defining contracts, entry points, or threat-sensitive capabilities: [references/security.md](references/security.md)
 - Step-by-step architecture workflow; read when executing a new design from scratch: [references/implementation-process.md](references/implementation-process.md)
 
 ## When To Use This Skill
@@ -69,5 +75,6 @@ Use this skill when:
 - structuring frontend, backend, or service-based systems
 - defining contracts and boundaries across modules
 - enforcing long-term maintainability practices
+- aligning security controls with capability boundaries and contracts
 
 This skill is framework-agnostic and pairs well with framework-specific implementation skills.
