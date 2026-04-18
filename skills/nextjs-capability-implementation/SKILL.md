@@ -1,6 +1,6 @@
 ---
 name: nextjs-capability-implementation
-description: Implements capability-based architecture inside TypeScript-first Next.js applications with correct server/client boundaries, routing adapters, secure configuration patterns, and server-side observability practices. Use when creating or refactoring Next.js projects that should follow capability architecture principles and enforce TypeScript, linting, and testing standards.
+description: Implements capability-based architecture inside TypeScript-first Next.js applications with current stable Next.js and React, verified dependency security, correct server/client boundaries, routing adapters, secure configuration patterns, and server-side observability practices. Use when creating or refactoring Next.js projects that should follow capability architecture principles and enforce TypeScript, linting, and testing standards.
 ---
 
 # Next.js Capability Implementation
@@ -11,7 +11,7 @@ Apply capability-architecture principles inside Next.js projects using concrete 
 
 When implementing a Next.js feature or system:
 
-1. Bootstrap project with secure defaults
+1. Bootstrap project with secure defaults (see dependency and version security rules)
 2. Establish capability-first folder structure
 3. Keep `app/` focused on routing and composition
 4. Enforce server/client execution boundaries
@@ -23,6 +23,9 @@ When implementing a Next.js feature or system:
 
 ## Non-Negotiable Rules
 
+- **Next.js and React versions**: use the **latest stable Next.js** and the **React / `react-dom` versions that release requires**; do not intentionally pin to unsupported or end-of-life stacks without a documented, reviewed exception
+- **Vulnerabilities**: before treating bootstrap or a dependency upgrade as complete, run a **package-manager audit** (or equivalent) and resolve or explicitly document **high/critical** (and any policy-defined “major”) issues affecting `next`, `react`, `react-dom`, and other app runtime dependencies
+- **Preferred bootstrap**: create new apps with **Create Next App** via `npx` / `pnpm dlx` / `bunx` so the official toolchain and peer versions stay aligned (see reference below)
 - Treat Next.js primitives as delivery mechanisms, not business-logic containers
 - Keep Server Actions and Route Handlers thin; delegate to capability logic
 - Do not leak secrets or sensitive env vars into client bundles
@@ -43,9 +46,11 @@ Implementations produced with this skill should:
 - include server-side logging/observability at transport and capability boundaries
 - be covered by basic linting (ESLint) and tests for critical capability paths
 - keep project structure and references consistent and maintainable
+- use supported `next` / `react` / `react-dom` versions and satisfy the dependency security baseline in [references/dependency-and-version-security.md](references/dependency-and-version-security.md)
 
 ## Reference Index
 
+- **Next.js / React version choice, Create Next App, and vulnerability audits**: [references/dependency-and-version-security.md](references/dependency-and-version-security.md)
 - Project bootstrap steps and baseline setup sequence: [references/project-bootstrap.md](references/project-bootstrap.md)
 - Environment variable safety rules and secret exposure boundaries: [references/environment-variables.md](references/environment-variables.md)
 - `.gitignore` patterns for Next.js and sensitive files: [references/gitignore.md](references/gitignore.md)

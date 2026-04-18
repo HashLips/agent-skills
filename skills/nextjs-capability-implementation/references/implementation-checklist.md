@@ -1,5 +1,10 @@
 # Implementation Checklist
 
+## Project and dependency baseline (before or when touching dependencies)
+
+- **Next / React / `react-dom`**: on current stable, compatible versions per [dependency-and-version-security.md](dependency-and-version-security.md)
+- **Audit**: package-manager audit (or equivalent) run for the lockfile; high/critical runtime issues resolved or explicitly documented
+
 When implementing a feature:
 
 1. Identify the capability module.
