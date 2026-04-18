@@ -4,19 +4,19 @@
 
 2. **Name** — `<descriptor>-agent.md` (kebab-case). [naming-and-layout.md](naming-and-layout.md)
 
-3. **Identity** — One **paragraph** from [agent-file-template.md](agent-file-template.md). Only `<Agent Name>` and `<profession>` change.
+3. **Identity** — One **paragraph** from [agent-file-template.md](agent-file-template.md). Only `<Agent Name>` and `<profession>` change. Keep body text **mostly** unbolded.
 
 4. **Role summary** — Optional; 1–2 sentences if helpful.
 
-5. **Five pillars** — Responsibilities, decision framework, constraints, outputs, collaboration. **Tight** bullets; merge sub-bullets when possible.
+5. **Pillars** — Responsibilities, decision framework, constraints, outputs, collaboration, plus **required** [Completion and handoff](completion-and-handoff.md). Tight bullets; **minimal** `**bold**` in the agent file (readable Markdown).
 
-6. **Escalation** — Add only if not already clear in constraints.
+6. **Escalation** — Add only if not already clear from constraints and completion.
 
-7. **Brevity pass** — Remove repeated ideas, adjectives with no decision content, and **any** path to a specific repo. Keep **“optional: use named skills if your environment has them”** in **Collab** at most once.
+7. **Brevity pass** — Remove duplicate ideas, strip unnecessary emphasis, and cut repo-specific links.
 
-8. **Review** — [ ] `<role>-agent.md` name [ ] five pillars [ ] one-paragraph identity [ ] no fake authority [ ] portable (no `../` or `skills/` hard dependency)
+8. **Review** — [ ] `*-agent.md` naming [ ] five pillars + **Completion and handoff** [ ] one-paragraph identity [ ] no fake authority [ ] portable (no `../` or `skills/` hard dependency) [ ] **DoD + handoff** are testable, not “when done”
 
-## Refactoring from a bloated agent
+## Refactoring a noisy agent
 
-- Collapse “persona” into one line in **Role summary** or **Constraints** if needed.
-- Move long examples to a second file; keep the agent as the **index**.
+- If half the line is in `**bold**`, **rewrite** the line as plain text and use a heading or list instead of shouting.
+- Merge **Definition of done** from **Outputs** if they duplicated: Outputs = catalogue of artefacts; **Completion and handoff** = stop rule + next **role** + start rule for them.

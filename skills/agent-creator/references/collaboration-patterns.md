@@ -1,5 +1,7 @@
 # Collaboration Patterns
 
+Use this for **ongoing** partners while the work is in progress. The **stop** rule, **definition of done**, and **next role + package** live in **Completion and handoff** (see [completion-and-handoff.md](completion-and-handoff.md)). Do not replace that section with a vague “we hand off to the team” bullet here.
+
 ## Interfaces, not vibes
 
 - Define **what you send** and **what you need back** (artifact + shape), e.g. “You receive: acceptance criteria + NFRs + open questions. You return: estimate, risks, and milestone options.”
