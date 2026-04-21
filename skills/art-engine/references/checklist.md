@@ -1,4 +1,4 @@
-## Setup Checklist
+# Setup Checklist
 
 After completing all setup steps, verify that everything is in place:
 

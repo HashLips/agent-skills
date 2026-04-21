@@ -1,5 +1,10 @@
 # Boundaries and Contracts
 
+## Summary
+
+- Defines guidance for boundaries and contracts.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 Modules should communicate through **contracts**.
 
 Contracts define the inputs and outputs between modules.

@@ -1,5 +1,11 @@
 # SVG shapes
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 Basic shape elements for simple geometry. Use when the design is rectangles, circles, ellipses, or lines; otherwise prefer `path` for full control.
 
 ## Rectangle: `rect`

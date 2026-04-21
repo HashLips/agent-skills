@@ -1,4 +1,4 @@
-## Important Notes
+# Important Notes
 
 ### Requirements
 

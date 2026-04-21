@@ -1,29 +1,35 @@
 # Authoring Workflow
 
-1. **Role** — One profession per `<descriptor>-agent.md`. Split combined asks into multiple agents or a thin coordinator.
+## Summary
 
-2. **Name** — `<descriptor>-agent.md` (kebab-case). [naming-and-layout.md](naming-and-layout.md)
+- Follow this sequence to produce consistent, lean agent files.
+- Treat QA as a required gate, not optional review.
 
-3. **Identity** — One **paragraph** from [agent-file-template.md](agent-file-template.md). Only `<Agent Name>` and `<profession>` change. Keep body text **mostly** unbolded.
+## Workflow
 
-4. **Role summary** — Optional; 1–2 sentences if helpful.
+1. Define one profession per `*-agent.md` file.
+2. Use kebab-case naming and `-agent.md` suffix.
+3. Fill one-paragraph Identity from template.
+4. Add optional Role summary if needed.
+5. Add role pillars plus required failure and completion sections.
+6. Run compression pass (shorten, dedupe, move deep detail out).
+7. Add escalation only if constraints/completion do not already cover it.
+8. Run brevity pass (remove repetition and emphasis noise).
+9. Calibrate against exemplars for density and shape.
+10. Run hard QA rubric and fix all failures.
+11. Run final review checklist.
 
-5. **Pillars** — Responsibilities, decision framework, constraints, **Failure modes and recovery**, outputs, collaboration, plus **required** [Completion and handoff](completion-and-handoff.md). Tight bullets; **minimal** `**bold**` in the agent file (readable Markdown).
+## Review Checklist
 
-6. **Compression pass** — Convert paragraphs to bullets, delete repeated rules, and keep "how-to" detail in references/skills instead of the agent body.
+- [ ] `*-agent.md` naming is correct.
+- [ ] Required sections are present.
+- [ ] Identity is one paragraph.
+- [ ] DoD and handoff are testable.
+- [ ] File is portable (no repo-locked dependencies).
+- [ ] Target size and scanability are met.
 
-7. **Escalation** — Add only if not already clear from constraints and completion.
+## Refactoring Tips
 
-8. **Brevity pass** — Remove duplicate ideas, strip unnecessary emphasis, and cut repo-specific links.
-
-9. **Style calibration** — Compare density/structure with [role-family-exemplars.md](role-family-exemplars.md) and tighten if your draft is bulkier.
-
-10. **Hard QA gate** — Apply [qa-rubric.md](qa-rubric.md). Any "fail" must be fixed before delivery.
-
-11. **Review** — [ ] `*-agent.md` naming [ ] role pillars + failure micro-section + **Completion and handoff** [ ] one-paragraph identity [ ] no fake authority [ ] portable (no `../` or `skills/` hard dependency) [ ] **DoD + handoff** are testable, not “when done” [ ] target size ~250-500 words [ ] sections are list-first and scannable
-
-## Refactoring a noisy agent
-
-- If half the line is in `**bold**`, **rewrite** the line as plain text and use a heading or list instead of shouting.
-- Merge **Definition of done** from **Outputs** if they duplicated: Outputs = catalogue of artefacts; **Completion and handoff** = stop rule + next **role** + start rule for them.
-- If a section exceeds ~7 bullets, combine adjacent bullets or move deep examples to a reference.
+- Replace bold-heavy lines with plain list items.
+- Merge duplicate guidance across sections.
+- Move large examples into references.

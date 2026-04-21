@@ -3,6 +3,8 @@ name: art-engine
 description: Sets up an Art Engine 2.0 project for creating generative layered NFT artworks with correct structure, dependencies, configuration, and plugin scaffolding. Use when you need to initialize a complete Art Engine project or regenerate its setup based on updated requirements.
 ---
 
+# Art Engine
+
 ## ⚠️ IMPORTANT: Disclaimer
 
 **CRITICAL - MUST EXECUTE FIRST:** Before proceeding with any setup steps, you MUST present the following disclaimer to the user:

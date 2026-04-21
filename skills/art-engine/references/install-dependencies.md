@@ -1,4 +1,4 @@
-## Install Dependencies
+# Install Dependencies
 
 Install the required dependencies for the Art Engine project.
 

@@ -1,5 +1,11 @@
 # SVG composition (defs and use)
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 Reuse the same graphic multiple times without duplicating markup. **defs** holds definitions; **use** instantiates them. This keeps files small and edits in one place.
 
 ## defs — definitions

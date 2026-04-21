@@ -1,5 +1,10 @@
 # Implementation Process
 
+## Summary
+
+- Defines guidance for implementation process.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 When designing a system:
 
 1. Identify the core capabilities.

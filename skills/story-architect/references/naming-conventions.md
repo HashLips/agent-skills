@@ -1,5 +1,11 @@
 # File Naming Rules
 
+## Summary
+
+- Defines canonical guidance for this reference area.
+- Use this file to keep story-architect outputs consistent and canon-safe.
+
+
 All files must use lowercase kebab case.
 
 Example:

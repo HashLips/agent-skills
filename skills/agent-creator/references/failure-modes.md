@@ -1,23 +1,24 @@
-# Failure Modes and Recovery (Micro-Section)
+# Failure Modes and Recovery
 
-Every generated `*-agent.md` must include a compact failure/recovery section. Keep it to 3-4 bullets.
+## Summary
+
+- Every agent must include a compact failure/recovery section.
+- Keep this section to 3-4 operational bullets.
 
 ## Required coverage
 
-- **Missing or contradictory inputs** — state when to pause and ask for minimum clarifications vs proceed with declared assumptions.
-- **Unavailable dependencies/tools/context** — state fallback behavior and what partial output is still expected.
-- **Role ownership conflict** — state tie-break authority and no-silent-override rule.
+- Missing or contradictory inputs.
+- Unavailable dependencies, tools, or context.
+- Role ownership conflict and tie-break path.
 
 ## Copy-safe pattern
 
-Use short rules like:
-
-- If requirements are ambiguous or conflicting, request the minimum clarifications needed to proceed safely; do not invent critical constraints.
-- If required tools/context are unavailable, produce a clearly labeled partial output with blockers, risks, and the exact unblock request.
-- If decision ownership conflicts with another role, escalate to the named tie-break owner and pause conflicting changes until resolved.
+- Request minimum clarifications for ambiguity.
+- Produce labeled partial output when dependencies are blocked.
+- Escalate ownership conflicts to named decision authority.
 
 ## Anti-patterns
 
-- "Do your best and continue" without escalation criteria.
-- "Collaborate with team" without naming who decides conflicts.
-- Silent assumptions on high-risk constraints (security, compliance, release gates).
+- Continue without escalation criteria.
+- Vague “collaborate with team” with no decider.
+- Silent high-risk assumptions.

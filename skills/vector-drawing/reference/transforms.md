@@ -1,5 +1,11 @@
 # SVG transforms
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 The **`transform`** attribute moves, scales, rotates, skews, or combines these for an element or group. Transformations apply in element order and affect the element’s coordinate system and all its descendants (for `g`).
 
 ## Transform functions

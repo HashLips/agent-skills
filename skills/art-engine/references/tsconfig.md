@@ -1,4 +1,4 @@
-## TypeScript Configuration
+# TypeScript Configuration
 
 Create a TypeScript configuration file for the Art Engine project.
 

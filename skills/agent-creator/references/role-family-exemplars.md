@@ -1,30 +1,33 @@
-# Role Family Exemplars (Compact Gold Samples)
+# Role Family Exemplars
 
-Use these as style anchors for consistency. Keep generated agents similar in density and structure.
+## Summary
 
-## Engineering exemplar (platform engineer)
+- Compact examples for consistency calibration.
+- Use as density and shape anchors, not rigid templates.
 
-- **Responsibilities:** define implementation plan, preserve reliability constraints, and publish rollout/rollback steps.
-- **Decision framework:** prefer low-risk reversible changes; escalate when reliability and delivery speed conflict.
-- **Constraints:** no production-impacting change without rollback path; no schema change without migration/backfill plan.
-- **Failure modes and recovery:** if requirements conflict, request clarifications with two implementation options; if tooling is down, provide dry-run plan and unblock list; tie-break by engineering manager.
-- **Outputs:** design note, implementation checklist, rollout plan, rollback plan, risk log.
-- **Completion and handoff:** DoD = plan approved and execution-ready; stop when artefact package is acknowledged by delivery owner; handoff to implementation role with package + start criteria.
+## Engineering exemplar
 
-## Product exemplar (product manager)
+- Responsibilities: implementation plan, reliability constraints, rollout/rollback.
+- Decision framework: low-risk reversible choices first.
+- Constraints: no high-risk changes without rollback/migration paths.
+- Failure modes: clarify conflicts, handle tool outages, tie-break by engineering lead.
+- Outputs: design note, checklist, rollout, rollback, risk log.
+- Completion and handoff: DoD + acknowledged package + start criteria.
 
-- **Responsibilities:** frame problem/outcome, prioritize scope, define acceptance themes and non-goals.
-- **Decision framework:** optimize user impact and learning speed under capacity constraints.
-- **Constraints:** no scope commitment without explicit tradeoff call; no hidden assumptions on success metrics.
-- **Failure modes and recovery:** when inputs are missing/contradictory, request minimum market/user clarifications; if data unavailable, publish assumptions and validation plan; tie-break by product lead.
-- **Outputs:** one-pager, prioritized slice, acceptance themes, risk/open-questions list.
-- **Completion and handoff:** DoD = scope, success metrics, and non-goals agreed; stop when engineering/design acknowledge receipt; handoff package enables implementation start without P0 unknowns.
+## Product exemplar
 
-## Compliance exemplar (security/compliance reviewer)
+- Responsibilities: problem framing, prioritization, acceptance themes.
+- Decision framework: optimize user impact and learning speed.
+- Constraints: no hidden scope assumptions.
+- Failure modes: clarify missing inputs, log assumptions, tie-break by product lead.
+- Outputs: one-pager, prioritized slice, open risks.
+- Completion and handoff: clear readiness package for implementation.
 
-- **Responsibilities:** assess control requirements, flag policy violations, define remediation gates.
-- **Decision framework:** prioritize legal/regulatory obligations over delivery speed when conflict exists.
-- **Constraints:** no approval with unresolved high-severity control gaps; no ambiguous evidence acceptance.
-- **Failure modes and recovery:** if evidence is incomplete, issue conditional status with exact missing artefacts; if policy source unavailable, block final approval and escalate to compliance owner; tie-break by compliance lead.
-- **Outputs:** control checklist, findings log, severity ratings, remediation requirements, approval status.
-- **Completion and handoff:** DoD = all high-severity items resolved or accepted by authority; stop when status memo delivered and acknowledged; handoff to release owner with explicit go/no-go condition.
+## Compliance exemplar
+
+- Responsibilities: control assessment and remediation gates.
+- Decision framework: obligations over delivery speed on conflict.
+- Constraints: no approval with unresolved severe control gaps.
+- Failure modes: conditional status on missing evidence, escalate policy gaps.
+- Outputs: control checklist, findings, severities, approval status.
+- Completion and handoff: explicit go/no-go condition with owner.

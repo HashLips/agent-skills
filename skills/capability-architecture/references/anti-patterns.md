@@ -1,10 +1,15 @@
 # Architecture Anti-Patterns
 
+## Summary
+
+- Defines guidance for architecture anti-patterns.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 These patterns increase coupling, reduce adaptability, and make systems harder to evolve.
 
 ---
 
-## 1) Layer Leakage
+## Layer Leakage
 
 Business logic depends on UI frameworks, HTTP objects, ORM entities, or transport-specific types.
 
@@ -16,7 +21,7 @@ Avoid by:
 
 ---
 
-## 2) Capability Bypass
+## Capability Bypass
 
 One module reaches into another module's internals rather than using its contract.
 
@@ -28,7 +33,7 @@ Avoid by:
 
 ---
 
-## 3) Presentation-Heavy Business Rules
+## Presentation-Heavy Business Rules
 
 Controllers, resolvers, pages, or UI components contain business decisions and orchestration.
 
@@ -39,7 +44,7 @@ Avoid by:
 
 ---
 
-## 4) Infrastructure-Coupled Domain
+## Infrastructure-Coupled Domain
 
 Domain logic directly calls databases, queues, or external APIs.
 
@@ -50,7 +55,7 @@ Avoid by:
 
 ---
 
-## 5) Premature Shared Abstractions
+## Premature Shared Abstractions
 
 Generic shared utilities are extracted before real reuse patterns exist.
 
@@ -62,7 +67,7 @@ Avoid by:
 
 ---
 
-## 6) Ambiguous Capability Ownership
+## Ambiguous Capability Ownership
 
 Multiple modules partially own the same business workflow with no clear source of truth.
 
@@ -73,7 +78,7 @@ Avoid by:
 
 ---
 
-## 7) Wrong Dependency Direction
+## Wrong Dependency Direction
 
 Inner layers depend on outer layers, making core logic fragile and hard to test.
 
@@ -85,7 +90,7 @@ Avoid by:
 
 ---
 
-## 8) Missing Security at Capability Boundaries
+## Missing Security at Capability Boundaries
 
 Use cases are reachable without consistent authentication or authorization, or untrusted input reaches domain logic unchanged.
 

@@ -8,7 +8,7 @@ themes:
 status:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -18,7 +18,7 @@ status:
 
 ## Notes
 
-# Region Template
+## Region Template
 
 ---
 category: region
@@ -32,7 +32,7 @@ themes:
 status:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -44,7 +44,7 @@ status:
 
 ## Notes
 
-# Rule Template
+## Rule Template
 
 ---
 category: rule
@@ -57,7 +57,7 @@ status:
 scope:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -67,7 +67,7 @@ scope:
 
 ## Notes
 
-# Inhabitant Template
+## Inhabitant Template
 
 ---
 category: inhabitant
@@ -80,7 +80,7 @@ status:
 nature:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -92,7 +92,7 @@ nature:
 
 ## Notes
 
-# Artifact Template
+## Artifact Template
 
 ---
 category: artifact
@@ -105,7 +105,7 @@ themes:
 status:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -117,7 +117,7 @@ status:
 
 ## Notes
 
-# Phenomenon Template
+## Phenomenon Template
 
 ---
 category: phenomenon
@@ -129,7 +129,7 @@ themes:
 status:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -141,7 +141,7 @@ status:
 
 ## Notes
 
-# Culture Template
+## Culture Template
 
 ---
 category: culture
@@ -152,7 +152,7 @@ themes:
 status:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -164,7 +164,7 @@ status:
 
 ## Notes
 
-# Symbol Template
+## Symbol Template
 
 ---
 category: symbol
@@ -176,7 +176,7 @@ themes:
 status:
 ---
 
-# Name
+## Name
 
 ## Overview
 
@@ -188,7 +188,7 @@ status:
 
 ## Notes
 
-# Myth Template
+## Myth Template
 
 ---
 category: myth
@@ -200,7 +200,7 @@ themes:
 status:
 ---
 
-# Name
+## Name
 
 ## Summary
 
@@ -208,7 +208,7 @@ status:
 
 ## Notes
 
-# Story Template
+## Story Template
 
 ---
 category: story
@@ -221,7 +221,7 @@ status:
 story_type:
 ---
 
-# Name
+## Name
 
 ## Premise
 
@@ -229,7 +229,7 @@ story_type:
 
 ## Notes
 
-# Artwork Template
+## Artwork Template
 
 ---
 category: artwork
@@ -245,7 +245,7 @@ year:
 based_on:
 ---
 
-# Name
+## Name
 
 ## Overview
 

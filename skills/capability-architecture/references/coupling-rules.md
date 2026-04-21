@@ -1,5 +1,10 @@
 # Coupling Rules
 
+## Summary
+
+- Defines guidance for coupling rules.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 Maintaining loose coupling is essential for long-term system adaptability.
 
 ---

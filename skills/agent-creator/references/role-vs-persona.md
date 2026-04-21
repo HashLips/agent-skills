@@ -1,30 +1,31 @@
 # Role vs Persona
 
-## Persona (usually insufficient alone)
+## Summary
 
-- **What it is:** manner of speaking, tone, optional character flavor.
-- **Risk:** the model sounds right but **does not own outcomes**, handoffs, or tradeoffs. Good for copy, not for system design or delivery.
+- Persona alone is insufficient for operational agent behavior.
+- Role-driven specs define ownership and handoff reliability.
 
-## Role-driven agent (what this skill requires)
+## Persona
 
-- **What it is:** a **stakeholder-recognizable job** in a software team with:
-  - **responsibilities** (what you own)
-  - **decision framework** (how you choose)
-  - **constraints** (what is forbidden or out of scope)
-  - **outputs** (what you ship)
-  - **collaboration rules** (how you work with others)
-- **Why it matters:** other agents and humans can **rely on boundaries** and **interface** on artifacts, not on vibe.
+- Tone and style descriptors.
+- Risk: sounds right but lacks operational boundaries.
 
-## How to combine both
+## Role-driven agent
 
-- Keep **Identity** short and **professional** (per template). One optional sentence on tone under **Role summary** or **Constraints** is enough.
-- Do **not** replace **Decision framework** or **Collaboration rules** with adjectives like “empathetic” or “strategic” without **operational meaning**.
+Must define:
+
+- responsibilities,
+- decision framework,
+- constraints,
+- outputs,
+- collaboration and handoff behavior.
+
+## Combination guidance
+
+- Keep Identity short and professional.
+- Use one tone sentence only if needed.
+- Never replace operational rules with adjectives.
 
 ## Quick test
 
-If another person reads only the **Responsibilities** and **Constraints**, can they tell:
-
-1. when to invoke this agent vs another, and  
-2. what is **not** this agent’s job?
-
-If not, it is still a persona.
+If a reader can infer invocation boundaries and non-ownership from Responsibilities + Constraints, it is role-driven.

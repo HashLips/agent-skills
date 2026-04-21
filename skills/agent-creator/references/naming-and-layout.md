@@ -1,22 +1,27 @@
 # Naming and Layout
 
-## File name (canonical for this library)
+## Summary
 
-- **Pattern:** `<role-descriptor>-agent.md` in **kebab-case**
-- The suffix **`-agent.md`** is required (e.g. `product-manager-agent.md`, not `product-manager.md`).
-- The descriptor is the **role** (e.g. `sre`, `stakeholder-communication`), not a product codename unless the role is literally project-specific and documented as such.
+- Standardized naming keeps agent packs predictable.
+- Layout should stay portable across repositories and tools.
+
+## File naming
+
+- Pattern: `<role-descriptor>-agent.md` (kebab-case).
+- Suffix `-agent.md` is required.
+- Descriptor should represent the role, not arbitrary codename.
 
 ## One role per file
 
-- Do not combine distinct professions in one file unless the team explicitly defined a single “orchestrator” handoff spec.
+- Do not combine distinct professions unless the file is a defined orchestrator role.
 
-## Where to put files
+## Placement
 
-- Anywhere your org keeps agents (`agents/`, `docs/`, a cursor folder, a zip for clients). The agent text must **not** depend on a specific path.
-- A small **index** (e.g. `README` table) helps discovery but is optional.
+- Files may live in any agent folder structure.
+- Agent content must not depend on fixed paths.
 
-## Agents and skills (portable)
+## Agents vs skills
 
-- An **agent** = role spec (`<role>-agent.md` in this library).
-- A **skill** = separate reusable procedure (often `SKILL.md` elsewhere), **not** the same file.
-- Reference skills **by title or short name** only when the user’s environment has them. Do not embed `../../../` links or a mandatory `skills/` path inside agent bodies.
+- Agent: role behavior and decision boundaries.
+- Skill: reusable procedural guidance.
+- Reference skills by name only when available.

@@ -1,43 +1,46 @@
 # Skill Quality Checklist
 
-Use this checklist before finalizing any skill.
+## Summary
 
-## Discovery Quality
+- Run this checklist before finalizing any skill.
+- Treat unchecked items as required fixes.
 
-- [ ] Purpose is specific and not overloaded
-- [ ] Trigger scenarios are explicit
-- [ ] Constraints or non-goals are stated
+## Discovery quality
 
-## Frontmatter Quality
+- [ ] Purpose is specific and not overloaded.
+- [ ] Trigger scenarios are explicit.
+- [ ] Constraints or non-goals are clear.
 
-- [ ] `name` is lowercase kebab-case
-- [ ] `description` states WHAT and WHEN
-- [ ] `description` follows: `<what it does>. Use when <trigger scenarios>.`
-- [ ] Description is concise and not generic
+## Frontmatter quality
 
-## Structure Quality
+- [ ] `name` is lowercase kebab-case.
+- [ ] `description` states WHAT and WHEN.
+- [ ] `description` follows required sentence pattern.
+- [ ] Description is concise and specific.
 
-- [ ] Main `SKILL.md` is focused and minimal
-- [ ] References contain long-form details
-- [ ] Reference links are direct and valid
-- [ ] Each reference entry is description-first, then link
-- [ ] Terminology is consistent across files
+## Structure quality
 
-## Context Efficiency
+- [ ] Main `SKILL.md` is focused and minimal.
+- [ ] References hold long-form detail.
+- [ ] Reference links are valid and direct.
+- [ ] Reference index uses description-first entries.
+- [ ] Terminology is consistent.
 
-- [ ] No large duplicated sections
-- [ ] No unnecessary repetition across `SKILL.md`, references, or assets
-- [ ] No unnecessary theory in `SKILL.md`
-- [ ] Progressive disclosure is used correctly
+## Context efficiency
 
-## Execution Quality
+- [ ] Large sections are not duplicated.
+- [ ] Repetition across files is removed.
+- [ ] Main `SKILL.md` has no unnecessary theory.
+- [ ] Progressive disclosure is used correctly.
 
-- [ ] Workflow is clear and ordered
-- [ ] Output contract is explicit when applicable
-- [ ] Rules are enforceable and unambiguous
+## Execution quality
 
-## Repository Consistency
+- [ ] Workflow is ordered and clear.
+- [ ] Output contract is explicit when needed.
+- [ ] Rules are enforceable and unambiguous.
 
-- [ ] Style matches existing skills in this repository
-- [ ] File naming and placement follow repository patterns
-- [ ] Any optional assets are justified and useful
+## Repository consistency
+
+- [ ] Style matches existing repository skills.
+- [ ] Naming and placement follow repository conventions.
+- [ ] Optional assets are justified.

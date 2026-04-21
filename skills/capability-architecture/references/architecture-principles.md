@@ -1,5 +1,10 @@
 # Core Architectural Principles
 
+## Summary
+
+- Defines guidance for core architectural principles.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 The foundation of this architecture is the rule:
 
 **Separate what the system does from how it is displayed, how it is stored, and how it is called.**

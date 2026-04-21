@@ -1,5 +1,11 @@
 # SVG styling (fill and stroke)
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 How to paint the interior and outline of shapes. The core attributes are **fill** and **stroke**; most vector art only needs these plus stroke width and join/cap.
 
 ## Fill
