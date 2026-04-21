@@ -1,5 +1,10 @@
 # Security at Capability Boundaries
 
+## Summary
+
+- Defines guidance for security at capability boundaries.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 Security is not separate from architecture: it is enforced where capabilities meet—entry points, contracts, and data that crosses trust zones.
 
 ---

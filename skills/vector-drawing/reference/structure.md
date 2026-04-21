@@ -1,5 +1,11 @@
 # SVG structure
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 How to set up the SVG document and coordinate system for generated artwork.
 
 ## Root: `svg`

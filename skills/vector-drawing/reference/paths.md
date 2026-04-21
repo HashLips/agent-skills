@@ -1,5 +1,11 @@
 # SVG paths
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 The `path` element is the main tool for arbitrary vector shapes. Paths are defined by a `d` (path data) attribute: a string of commands that draw geometry.
 
 ## Path element

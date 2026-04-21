@@ -7,7 +7,7 @@ description: Design software systems around capabilities, clear boundaries, and 
 
 Design systems that remain adaptable, modular, and maintainable by organizing software around capabilities, boundaries, contracts, and layered responsibilities.
 
-## Core Rule
+## Core Rules
 
 Always separate:
 
@@ -18,7 +18,7 @@ Always separate:
 
 This keeps business logic portable and prevents tight coupling to frameworks, transport, and infrastructure.
 
-## Execution Workflow
+## Workflow
 
 When designing or refactoring architecture:
 
@@ -34,29 +34,29 @@ When designing or refactoring architecture:
 
 ## Non-Negotiable Rules
 
-- Organize by capabilities, not by technical artifact type
-- Keep dependency direction inward toward domain logic
-- Keep presentation and transport layers thin
-- Keep infrastructure replaceable through adapters
-- Communicate between modules through contracts only
-- Introduce shared abstractions only after reuse is proven
-- Enforce authorization consistently at capability entry points, not only at one outer transport layer
-- Validate untrusted input at trust boundaries; keep domain and application logic working on safe, explicit inputs
-- Classify sensitive data and secrets; keep secret handling in infrastructure, not in domain rules
-- Define capability-level observability signals at entry, success, and failure boundaries
-- Keep logs structured and safe: include correlation context, exclude secrets and unnecessary sensitive data
+- Organize by capabilities, not technical artifact type.
+- Keep dependency direction inward toward domain logic.
+- Keep presentation and transport layers thin.
+- Keep infrastructure replaceable through adapters.
+- Communicate between modules through contracts only.
+- Introduce shared abstractions only after reuse is proven.
+- Enforce authorization at capability entry points, not only one outer transport layer.
+- Validate untrusted input at trust boundaries; keep domain/application logic on safe explicit inputs.
+- Classify sensitive data and secrets; keep secret handling in infrastructure, not domain rules.
+- Define capability-level observability signals at entry, success, and failure boundaries.
+- Keep logs structured and safe with correlation context and without secret leakage.
 
 ## Output Contract
 
 Architectures produced with this skill should:
 
-- define clear capability ownership
-- define boundaries and contracts for interactions
-- show explicit layer responsibility split
-- avoid framework/database leakage into domain logic
-- document known anti-pattern risks and mitigations
-- state trust boundaries, authorization expectations, and sensitive data handling per capability where relevant
-- define observability expectations (events, metrics, trace points, correlation ids) per capability where relevant
+- Define clear capability ownership.
+- Define boundaries and contracts for interactions.
+- Show explicit layer responsibility split.
+- Avoid framework/database leakage into domain logic.
+- Document known anti-pattern risks and mitigations.
+- State trust boundaries, authorization expectations, and sensitive data handling per capability where relevant.
+- Define observability expectations (events, metrics, trace points, correlation IDs) per capability where relevant.
 
 ## Reference Index
 
@@ -75,12 +75,12 @@ Architectures produced with this skill should:
 
 Use this skill when:
 
-- designing new system architecture
-- refactoring an existing codebase for modularity
-- structuring frontend, backend, or service-based systems
-- defining contracts and boundaries across modules
-- enforcing long-term maintainability practices
-- aligning security controls with capability boundaries and contracts
-- designing reliable operational visibility for capability behavior in production
+- Designing new system architecture.
+- Refactoring an existing codebase for modularity.
+- Structuring frontend, backend, or service-based systems.
+- Defining contracts and boundaries across modules.
+- Enforcing long-term maintainability practices.
+- Aligning security controls with capability boundaries and contracts.
+- Designing reliable operational visibility for capability behavior in production.
 
 This skill is framework-agnostic and pairs well with framework-specific implementation skills.

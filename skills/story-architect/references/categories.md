@@ -1,5 +1,11 @@
 # Category Decision Guide
 
+## Summary
+
+- Defines canonical guidance for this reference area.
+- Use this file to keep story-architect outputs consistent and canon-safe.
+
+
 Use this section to both identify a category and understand what it represents.
 
 ## world

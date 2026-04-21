@@ -1,5 +1,10 @@
 # Observability by Capability
 
+## Summary
+
+- Defines guidance for observability by capability.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 Observability is part of architecture, not an afterthought. Define it where capabilities cross boundaries.
 
 ---

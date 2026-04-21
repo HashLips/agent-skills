@@ -1,5 +1,11 @@
 # Metadata Schema
 
+## Summary
+
+- Defines canonical guidance for this reference area.
+- Use this file to keep story-architect outputs consistent and canon-safe.
+
+
 All entries must begin with YAML front matter.
 
 ---

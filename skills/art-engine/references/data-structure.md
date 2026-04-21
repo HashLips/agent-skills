@@ -1,4 +1,4 @@
-## Data Directory Structure
+# Data Directory Structure
 
 Create a README.md file in the `data/` directory to guide users on organizing their image layers.
 

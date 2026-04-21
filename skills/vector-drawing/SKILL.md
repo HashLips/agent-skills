@@ -3,7 +3,7 @@ name: vector-drawing
 description: Creates SVG images and vector-based artworks. Use whenever you need to create SVG images, vector graphics, or vector-based artworks instead of raster or bitmap images.
 ---
 
-# VectorDrawing
+# Vector Drawing
 
 This skill guides creation of **vector-based artworks** using SVG—scalable, resolution-independent graphics. Apply it when the user asks for SVG output, vector graphics, logos, icons, illustrations, or any artwork that must scale cleanly.
 
@@ -22,19 +22,17 @@ The official standard is **SVG 2** (W3C). Use it as the authority for syntax and
 
 For most vector art, this subset is enough:
 
-| Element/attribute | Role |
-|-------------------|------|
-| `svg` | Root and canvas |
-| `viewBox` | Coordinate system and aspect ratio |
-| `path` | Arbitrary shapes and outlines |
-| `g` | Grouping and inheritance |
-| `fill` | Interior color/pattern |
-| `stroke` | Outline color/width |
-| `transform` | Move, scale, rotate, skew |
-| `clipPath` | Hard-edged visibility |
-| `mask` | Soft or gradient visibility |
-| `defs` | Define reusable content |
-| `use` | Reuse content by reference |
+- **`svg`** — Root and canvas.
+- **`viewBox`** — Coordinate system and aspect ratio.
+- **`path`** — Arbitrary shapes and outlines.
+- **`g`** — Grouping and inheritance.
+- **`fill`** — Interior color or pattern.
+- **`stroke`** — Outline color and width.
+- **`transform`** — Move, scale, rotate, skew.
+- **`clipPath`** — Hard-edged visibility.
+- **`mask`** — Soft or gradient visibility.
+- **`defs`** — Define reusable content.
+- **`use`** — Reuse content by reference.
 
 Master these before reaching for shapes, text, or filters.
 

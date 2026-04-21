@@ -1,6 +1,11 @@
 # File Layout Guide
 
-Use this layout as the default structure for new skills.
+## Summary
+
+- Use this as the default layout for new skills.
+- Keep structure simple and predictable.
+
+## Default layout
 
 ```text
 skill-name/
@@ -12,39 +17,24 @@ skill-name/
 └── assets/ (optional)
 ```
 
----
+## Layout rules
 
-## Layout Rules
+- `SKILL.md` is required and concise.
+- `references/` stores long-form guidance.
+- `assets/` is optional and must be justified.
 
-- `SKILL.md` is required and should stay concise
-- `references/` holds detailed guidance and long-form context
-- `assets/` is optional and should only exist when it materially improves outputs
+## Naming conventions
 
----
+- Skill folder: lowercase kebab-case.
+- Reference files: lowercase kebab-case with focused names.
+- Avoid generic filenames (`notes.md`, `misc.md`).
 
-## Naming Conventions
+## Reference strategy
 
-- Skill folder: lowercase kebab-case
-- Reference files: lowercase kebab-case with focused names
-- Avoid generic names like `notes.md` or `misc.md`
+- Keep references topical and scoped.
+- Prefer several focused files over one mixed document.
+- Ensure every reference is linked from `SKILL.md`.
 
----
+## Asset guidance
 
-## Reference Strategy
-
-- Keep references topical and scoped
-- Prefer multiple small references over one large mixed document
-- Ensure every reference is reachable from `SKILL.md`
-
----
-
-## Asset Guidance
-
-Add assets when needed for:
-
-- reusable templates
-- canonical examples
-- visual standards
-- domain-specific files used repeatedly
-
-Avoid adding assets that are rarely used or easy to regenerate.
+Add assets only for reusable templates, canonical examples, visual standards, or repeatedly used domain files.

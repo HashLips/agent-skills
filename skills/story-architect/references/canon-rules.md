@@ -1,5 +1,11 @@
 # Canon Rules
 
+## Summary
+
+- Defines canonical guidance for this reference area.
+- Use this file to keep story-architect outputs consistent and canon-safe.
+
+
 ## Canon Integrity
 
 Existing entries are protected canon records.

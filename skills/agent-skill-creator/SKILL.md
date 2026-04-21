@@ -5,50 +5,49 @@ description: Creates coherent Agent Skills with consistent format, minimal main 
 
 # Agent Skill Creator
 
-Create and maintain Agent Skills using a consistent blueprint that prioritizes clarity, discoverability, and low context cost.
+## Summary
 
-This skill standardizes how skills are authored so they remain easy to use, easy to extend, and consistent across the repository.
+- Build coherent, reusable Agent Skills with low context cost.
+- Keep main `SKILL.md` operational; move depth into references.
+- Standardize structure and naming across repository skills.
 
 ## Core Goals
 
-- Keep `SKILL.md` focused on operational instructions, not deep theory
-- Move detailed knowledge into reference files
-- Preserve consistent structure and naming across skills
-- Avoid context bloat while keeping guidance complete
+- Keep `SKILL.md` concise and action-oriented.
+- Store long-form guidance in `references/`.
+- Use consistent naming, layout, and discoverability patterns.
+- Avoid duplicated guidance across files.
 
 ## Authoring Workflow
 
-When creating or refactoring a skill, follow this sequence:
-
-1. Define purpose and trigger scenarios
-2. Create frontmatter (`name` and `description`)
-3. Write a concise main `SKILL.md`
-4. Move depth into `references/*`
-5. Add assets only when they improve execution quality
-6. Run the quality checklist before finalizing
-
-See:
-
-- [references/blueprint.md](references/blueprint.md)
-- [references/file-layout.md](references/file-layout.md)
-- [references/quality-checklist.md](references/quality-checklist.md)
+1. Define skill intent and trigger scenarios.
+2. Write frontmatter (`name`, `description`).
+3. Draft minimal operational `SKILL.md`.
+4. Move depth into references.
+5. Add assets only if execution quality materially improves.
+6. Run quality checklist before finalizing.
+7. Apply final formatting pass using the available **MD Design System** skill.
 
 ## Non-Negotiable Rules
 
-- Every skill must include valid frontmatter
-- `name` must be lowercase kebab-case
-- `description` must always explain both what the skill does and when to use it
-- Use this description pattern: `<what it does>. Use when <trigger scenarios>.`
-- `SKILL.md` should be concise and action-oriented
-- Reference files must be one level deep and directly linked
-- Every reference entry in `SKILL.md` must be description-first, then link
-- Do not duplicate large guidance across `SKILL.md` and references
+- Frontmatter is required.
+- `name` is lowercase kebab-case.
+- `description` states what the skill does and when to use it.
+- `description` pattern: `<what it does>. Use when <trigger scenarios>.`
+- Reference links are one-level deep and description-first.
+- Do not duplicate large guidance across main and reference files.
+- Before delivery, format produced Markdown with the local MD design system skill.
+
+## Reference Index
+
+- **Authoring model and structure strategy:** [references/blueprint.md](references/blueprint.md)
+- **Default file layout and naming:** [references/file-layout.md](references/file-layout.md)
+- **Final quality gate checklist:** [references/quality-checklist.md](references/quality-checklist.md)
+- **Final Markdown formatting contract:** available **MD Design System** skill
 
 ## When To Use This Skill
 
-Use this skill when:
-
-- Creating a new agent skill from scratch
-- Refactoring an existing skill for consistency
-- Reducing token/context overhead in skills
-- Building a reusable template for team skill authoring
+- Creating a new skill from scratch.
+- Refactoring existing skills for consistency.
+- Reducing token overhead in skill packages.
+- Standardizing team skill authoring patterns.

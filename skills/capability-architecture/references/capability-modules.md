@@ -1,5 +1,10 @@
 # Capability Modules
 
+## Summary
+
+- Defines guidance for capability modules.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 Systems should be organized around **capabilities**.
 
 A capability represents a business function of the system.

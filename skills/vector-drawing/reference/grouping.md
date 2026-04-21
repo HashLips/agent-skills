@@ -1,5 +1,11 @@
 # SVG grouping
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 The **`g`** element groups children without drawing anything itself. Use it to structure artwork, apply shared transforms or styles, and keep markup readable.
 
 ## Purpose of `g`

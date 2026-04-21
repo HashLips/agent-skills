@@ -1,4 +1,4 @@
-## Initialize Node.js Project
+# Initialize Node.js Project
 
 **CRITICAL:** This is the first step and must be executed before any other steps.
 

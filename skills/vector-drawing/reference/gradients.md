@@ -1,5 +1,11 @@
 # SVG gradients
 
+## Summary
+
+- Defines canonical guidance for this SVG topic.
+- Use this file to keep vector output consistent and readable.
+
+
 Gradients define smooth color transitions for **fill** or **stroke**. Define them in `<defs>`, give an `id`, and reference with `fill="url(#id)"` or `stroke="url(#id)"`.
 
 ## Linear gradient: linearGradient

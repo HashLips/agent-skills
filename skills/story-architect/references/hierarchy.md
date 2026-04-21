@@ -1,5 +1,11 @@
 # Repository Structure
 
+## Summary
+
+- Defines canonical guidance for this reference area.
+- Use this file to keep story-architect outputs consistent and canon-safe.
+
+
 Use a flat, minimal folder structure.
 
 World entries must live in these folders:
@@ -19,7 +25,7 @@ World entries must live in these folders:
 Do not create category subfolders by default.
 Place files directly in their category folder (for example `artifacts/sky-unit-currency.md`).
 
-# Region Hierarchy
+## Region Hierarchy
 
 Places can exist within other places.
 

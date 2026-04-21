@@ -1,4 +1,4 @@
-## Folder Structure
+# Folder Structure
 
 Create the essential directory structure for the Art Engine project.
 

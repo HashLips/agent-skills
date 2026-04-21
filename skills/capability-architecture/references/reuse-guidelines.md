@@ -1,5 +1,10 @@
 # Reuse Guidelines
 
+## Summary
+
+- Defines guidance for reuse guidelines.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 Reusability should be introduced gradually.
 
 Not all duplication is harmful.

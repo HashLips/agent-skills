@@ -1,92 +1,68 @@
 # Skill Blueprint
 
-Use this blueprint to produce coherent, low-noise skills.
+## Summary
 
----
+- Use this blueprint to create coherent, low-noise skills.
+- Keep intent, structure, and output contract explicit.
 
-## 1) Define Skill Intent
+## Define Skill Intent
 
 Capture:
 
-- primary job the skill performs
-- trigger phrases or scenarios
-- expected output behavior
-- constraints or guardrails
+- primary job,
+- trigger scenarios,
+- expected output behavior,
+- constraints and non-goals.
 
-If intent is broad, split into multiple skills instead of creating one overloaded skill.
+Split broad intent into multiple skills instead of creating one overloaded skill.
 
----
-
-## 2) Author Frontmatter
+## Author Frontmatter
 
 Required fields:
 
-- `name`: lowercase kebab-case, stable identifier
-- `description`: one concise paragraph with:
-  - WHAT the skill does
-  - WHEN the skill should be used
+- `name` (lowercase kebab-case),
+- `description` (what + when).
 
-Recommended sentence form:
+Recommended sentence pattern:
 
 `<what it does>. Use when <trigger scenarios>.`
 
-Avoid vague descriptions like "helps with coding."
+## Keep Main SKILL.md Minimal
 
----
+Include only:
 
-## 3) Keep Main SKILL.md Minimal
+- role and goal,
+- core workflow,
+- strict rules/output contract,
+- reference links.
 
-Main file should contain only:
+Move deep theory and large examples to references.
 
-- role and goal of the skill
-- core workflow or execution steps
-- strict rules and output contract
-- links to reference files
+## Progressive Disclosure
 
-Do not place deep examples, long theory, or verbose explanation in `SKILL.md`.
+Store detailed content in references:
 
----
+- design decisions,
+- edge cases,
+- templates,
+- anti-patterns.
 
-## 4) Use Progressive Disclosure
+Use description-first links in `SKILL.md`.
 
-Store deeper guidance in references, for example:
+## Define Output Contract
 
-- design decisions
-- detailed examples
-- templates
-- edge-case rules
-- anti-patterns
+Specify:
 
-Link references directly from `SKILL.md` (one level deep).
+- structure and format,
+- naming and location rules,
+- validation checks.
 
-When listing references in `SKILL.md`, annotate each one with a short description so the model knows when to consult it.
-
-Recommended format:
-
-- `What this file covers and when to read it: [references/file.md](references/file.md)`
-
----
-
-## 5) Define Output Contract
-
-Specify what "good output" looks like:
-
-- structure
-- formatting
-- naming rules
-- location rules
-- validation checks
-
-If output quality is variable, include a checklist-driven review step.
-
----
-
-## 6) Final Validation
+## Final Validation
 
 Before shipping:
 
-1. Ensure format consistency with existing repository skills
-2. Remove repeated guidance
-3. Confirm reference links resolve
-4. Confirm descriptions are discoverable and specific
-5. Ensure tone and terminology are consistent
+1. check consistency with repository style,
+2. remove repeated guidance,
+3. verify all reference links,
+4. confirm discoverable descriptions,
+5. verify terminology consistency.

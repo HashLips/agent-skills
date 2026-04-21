@@ -1,5 +1,10 @@
 # Layering Model
 
+## Summary
+
+- Defines guidance for layering model.
+- Preserves capability boundaries and long-term maintainability decisions.
+
 The architecture separates concerns into four layers.
 
 ---

@@ -1,13 +1,19 @@
-## Art Engine Configuration
+# Art Engine Configuration
 
 Create the main `index.ts` file that configures and runs the Art Engine with core plugins.
 
 **IMPORTANT**: Before creating the configuration, read `references/core-plugins-overview.md` to understand all available plugin options and configuration patterns. Interpret the user's requirements from their request and configure plugins dynamically based on their needs.
 
-### File
+## Summary
+
+- Defines the canonical `index.ts` setup for Art Engine.
+- Requires dynamic configuration based on user requirements.
+- Uses CommonJS imports and project-root-aware path resolution.
+
+## File
 `index.ts`
 
-### Configuration
+## Configuration
 
 **CRITICAL IMPORT NOTE**: The Art Engine package uses CommonJS exports. Use `require` syntax, not ES6 imports.
 
@@ -99,7 +105,7 @@ const ae = new ArtEngine({
 })();
 ```
 
-### Configuration Details
+## Configuration Details
 
 - **Import Syntax**: Must use CommonJS `require` syntax: `const { ArtEngine, inputs, generators, renderers, exporters } = require("@hashlips-lab/art-engine");`
 - **Path Module**: Import `path` module: `const path = require("path");`
@@ -123,7 +129,7 @@ const ae = new ArtEngine({
   - `outputPath`: Base output directory (e.g., `${BASE_PATH}/output`)
   - `useCache`: Boolean to enable/disable caching (typically `false` for fresh generation)
 
-### Configuration Based on User Requirements
+## Configuration Based on User Requirements
 
 **You MUST interpret user requirements and configure accordingly:**
 
@@ -150,7 +156,7 @@ const ae = new ArtEngine({
 
 **Reference**: See `references/core-plugins-overview.md` for detailed plugin options, all configuration parameters, and common configuration patterns.
 
-### Using Custom Plugins
+## Using Custom Plugins
 
 When users request custom plugins, refer to `references/custom-plugins-overview.md` and the appropriate interface documentation:
 - Input plugins: `references/custom-plugin-inputs.md`
@@ -171,7 +177,7 @@ const ae = new ArtEngine({
 });
 ```
 
-### Important Notes
+## Important Notes
 
 - **CommonJS Syntax**: Use `require` instead of ES6 imports
 - **Inputs vs Generators**: The `dataSet` in the generator must match the key used in the `inputs` object
