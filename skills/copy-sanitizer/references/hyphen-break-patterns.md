@@ -1,58 +1,60 @@
 # Hyphen-Break Patterns
 
-## Core rule
+## Core rule (non-negotiable)
 
-**No banned-word list. No banned punctuation everywhere.** Target **join patterns in running prose** and **statistical repetition**.
+**Sanitized running prose has zero hyphen joins between words.**
 
-Fix how words are glued. Keep meaning. Use separate words or a normal phrase.
+If two ideas were glued as `word-word`, unpack them:
 
-## What to flag (shapes)
-
-| Pattern type | Shape | Illustrative samples only |
-| --- | --- | --- |
-| Editorial prefix join | `de-…`, `re-…` + word | `re-scan`, `de-AI` |
-| Technology prefix join | `XX-…` label + modifier | `AI-powered` |
-| Stacked modifiers | 2+ hyphen modifiers + noun | `high-impact, data-driven rollout` |
-| `over-` repetition | several in one section | `over-optimize`, `over-explain` |
-| Metric-style join | role words joined | `before/after`, `pre/post` |
-| Jargon pile | clustered vague compounds | consultant-style `-` chains |
-
-Samples are **not** exhaustive. Apply the shape in any domain.
-
-## What is not the target
-
-See [context-allowlist.md](context-allowlist.md). In short:
-
-- Skill `name` and paths (`copy-sanitizer`, `references/foo.md`)
-- List markers `-` and ordered `1.`
-- Label/value bullets per MD design system (`- **field** — value`)
-- Code, frontmatter, URLs, tracking keys
-- One correct hyphen in running prose
-
-## Rewrite direction
-
-Unpack joins in **prose** only. Examples:
-
-| Shape | Plain rewrite |
+| Instead of | Write |
 | --- | --- |
-| `re-…` verb | scan again, run a second pass |
-| `de-…` coinage | clean the draft, remove generated habits |
-| prefix + hype adjective | plain noun phrase |
-| stacked modifiers | one modifier or separate clause |
-| `before/after` in prose | first pass and second pass |
+| human-readable | readable, easy to read, plain language |
+| re-scan | scan again |
+| high-impact results | strong results, results that matter |
+| AI-powered tool | tool that uses AI, tool with AI features |
 
-Never swap one hyphen pile for another.
+Use separate words, a short rephrase, or one plain modifier. **Do not** replace one hyphen join with another.
 
-## Skill package prose
+This applies to **all** prose hyphen joins: editorial prefixes (`re-`, `de-`), technology labels (`AI-`), stacked modifiers, metric joins (`before/after`), and consultant compounds (`end-to-end` → `from start to finish` or `full`).
 
-This skill's **instructions** use plain words. Its **layout** follows agent-skill-creator and md-design-system (kebab names, label lines, `-` lists).
+## Input vs output
 
-## Self-check
+| Phase | Rule |
+| --- | --- |
+| **Detect** | Flag every `\b\w+-\w+\b` in prose (plus prefix/slash join shapes). |
+| **Edit** | Remove or rephrase every flagged join in prose. |
+| **Verify** | Final pass: prose must match zero hyphen joins. |
 
-1. Classify context ([context-allowlist.md](context-allowlist.md)).
-2. Search **prose only** for editorial joins and modifier stacks.
-3. Read aloud. Product-copy rhythm → unpack joins in sentences, not in required list syntax.
+Clustering still guides priority; a single join in prose should still be fixed on the final pass.
 
-## User documents
+## What is not prose (do not unpack)
 
-Flag clustering in prose. Respect host skill and repo markdown contracts.
+See [context-allowlist.md](context-allowlist.md):
+
+- Paths and filenames (`copy-sanitizer`)
+- Frontmatter, code, URLs, inline code
+- List markers (`- item`)
+- Label lines (`- **name** — value`)
+- Em dash between label and value is layout, not a word join
+
+## Detection shapes (illustrative)
+
+| Shape | Sample forms only |
+| --- | --- |
+| Editorial prefix join | `re-…`, `de-…` |
+| Technology prefix join | `AI-…`, `ML-…` |
+| Stacked modifiers | two+ hyphen modifiers before one noun |
+| `over-` repetition | several in one section |
+| Metric-style join | `before/after`, `pre/post` in a sentence |
+
+## Forbidden on output
+
+- Inventing new `word-word` forms in the rewrite
+- Swapping piles (`machine-written` → `model-written`)
+- Leaving "readable" style compounds because they sound grammatical
+
+## Self-check before delivery
+
+1. Search sanitized **prose** for `\b[a-zA-Z]+-[a-zA-Z]+\b` and `\b(de|re)-[a-z]+`.
+2. Search for `AI-` and similar prefix joins in sentences.
+3. If any match outside the allowlist, rephrase again.

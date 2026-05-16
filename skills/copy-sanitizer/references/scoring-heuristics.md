@@ -1,6 +1,15 @@
 # Scoring Heuristics
 
-Apply only to **prose regions** unless noted. Down-weight or skip syntax under [context-allowlist.md](context-allowlist.md).
+Apply to **prose regions** only. Syntax follows [context-allowlist.md](context-allowlist.md).
+
+## Hyphen joins (hard gate)
+
+| State | Rule |
+| --- | --- |
+| **Before** | Count every `\b\w+-\w+\b` and prefix/slash joins in prose |
+| **After** | Count must be **zero** in prose |
+
+No warn/flag tiers for output: all prose hyphen joins are removed. Clustering only sets edit order.
 
 ## Punctuation Density (per 1,000 prose words)
 
@@ -11,72 +20,29 @@ Apply only to **prose regions** unless noted. Down-weight or skip syntax under [
 | Semicolons | ≥ 6 | ≥ 12 |
 | Colons (prose) | ≥ 8 | ≥ 15 |
 | Ellipsis | ≥ 3 | ≥ 6 |
-| Parenthetical pairs | ≥ 10 | ≥ 18 |
 
-**Cluster rule:** warn threshold in two consecutive prose paragraphs flags those paragraphs.
+Label/value list lines do not count toward em dash density.
 
-Label/value list lines (`- **name** — value`) do not count toward em dash density.
+## Connector and Vague Vocab Scores
 
-## Hyphen-Break Join Score
-
-Per prose section:
-
-- +3 per editorial prefix join (`de-`, `re-`, minus allowlist)
-- +2 per technology-style prefix join in prose
-- +2 per noun phrase with 2+ hyphen modifiers
-- +1 per extra `over-` form beyond the first
-
-Section score ≥ 4 → hyphen join pass.
-
-## Connector Phrase Score
-
-- +2 per repeated **function** within 500 words (exact phrase or clear synonym role)
-- +1 per prose paragraph opening with a pivot (cap +5 per section)
-
-≥ 6 → `medium` residual; ≥ 10 → `high`.
-
-## Vague Vocabulary Score
-
-Per section, by **category** (corporate verb, meta noun, intensifier, hype adjective):
-
-- +3 per category with 3+ clustered terms in one paragraph
-- +2 per category with 5+ terms in one section
-- +1 per near-synonym repeat (same meaning, different buzz word)
-
-Normalize per 1,000 prose words: `< 4` low; `4–9` medium; `≥ 10` high.
+Use category repetition from [detection-patterns.md](detection-patterns.md). Clustered = prioritize; isolated = fix if quick without voice drift.
 
 ## Structural Sameness
 
-Flag when 3+ structural tells co-occur ([detection-patterns.md](detection-patterns.md)).
+Flag when 3+ structural tells co-occur in a section.
 
-## Rolling Window (Chunked Documents)
+## Residual Pattern Confidence (informal)
 
-Last **1,500 prose words:** connectors, vague vocab clusters, em dashes, hyphen joins.
-
-## Residual Pattern Confidence
-
-| Condition | Residual |
+| Level | Meaning |
 | --- | --- |
-| No `high`; ≤ 20% sections `medium` | low |
-| Any `high` OR > 35% `medium` | medium |
-| Multiple `high` or cluster rules still firing | high |
+| **low** | Prose passes zero hyphen join check; few other clusters remain |
+| **medium** | Hyphen joins cleared; some connector or vagueness clusters left by choice |
+| **high** | Major clusters remain or voice would break if pushed further |
 
-Aim for **low** after sanitize without breaking voice or host-skill layout.
+## Inline report (no tracking file)
 
-## When to Edit
+Include in the message to the user:
 
-Edit when pattern clusters, replacement matches register, meaning unchanged.
-
-Defer when:
-
-- Term or dash is required by host skill or MD design system
-- Syntax region (paths, keys, list markers, label lines)
-- Domain-standard for audience
-- Intentional rhythm or user-supplied phrasing
-
-## Comparison Report Fields
-
-- Words processed (prose vs syntax split optional)
-- Punctuation, connectors, vague vocab, hyphen joins, structure (first pass → second pass)
-- Active context / host skills noted
-- Residual confidence and brief rationale
+- Whether prose passed zero hyphen join check
+- Other pattern types touched
+- Approximate change level and any leftover hotspots

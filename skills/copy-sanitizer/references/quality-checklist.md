@@ -1,40 +1,31 @@
 # Quality Checklist
 
-Run before delivery. Aligns with agent-skill-creator ship gate and copy-sanitizer rules.
+Run before delivery.
 
-## Skill package shape (when editing this or any skill repo)
+## Hyphen join gate (required)
 
-- [ ] `SKILL.md` has frontmatter, Core Rules, Workflow, Constraints, Output Contract, Reference Index, When To Use.
-- [ ] Main `SKILL.md` is operational; depth lives in `references/`.
-- [ ] Every reference file is linked from `SKILL.md` Reference Index.
-- [ ] Kebab-case paths and md-design-system label lines preserved.
+- [ ] Every `word-word` join removed from **running prose**.
+- [ ] No new hyphen joins introduced in the rewrite.
+- [ ] Allowlist syntax intact (paths, code, list markers, label lines).
 
-## Intent and scope
+## Document handling
 
-- [ ] Scope and context classified ([context-allowlist.md](context-allowlist.md)).
-- [ ] Host skills noted.
-- [ ] Prose vs syntax regions marked.
-- [ ] First scan before edits.
+- [ ] Full document read and sanitized as normal text.
+- [ ] No `.copy-sanitizer-track.md` or side ledger unless user explicitly requested.
 
-## Generic detection
+## Pattern and voice
 
-- [ ] Pattern categories only; examples are illustrative.
-- [ ] Strongest clusters addressed first.
-- [ ] No hyphen-pile swap for another pile.
-
-## Preservation
-
-- [ ] Meaning and voice intact in prose.
+- [ ] Pattern categories used; examples treated as samples only.
+- [ ] Meaning and voice preserved in prose.
 - [ ] No fake humanity.
-- [ ] Layout contracts and links intact.
+- [ ] Host skill layout not flattened.
 
-## Metrics and handoff
+## Delivery
 
-- [ ] Second scan complete.
-- [ ] Comparison stats and residual level reported.
-- [ ] Sanitized copy and tracking path delivered if used.
+- [ ] Complete sanitized document returned.
+- [ ] Short inline report included (patterns touched, hyphen check passed).
 
-## Anti-patterns
+## Skill package (when editing skill repos)
 
-- [ ] Not a synonym swap or global word ban.
-- [ ] Skill `SKILL.md` shape not flattened into plain paragraphs.
+- [ ] `SKILL.md` shape and kebab paths preserved.
+- [ ] Prose inside skills still passes zero hyphen join rule.
