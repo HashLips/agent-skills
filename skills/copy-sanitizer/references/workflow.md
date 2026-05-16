@@ -1,38 +1,37 @@
 # Workflow
 
-Extended steps for **section** and **document** mode. Snippet flow matches main `SKILL.md` workflow.
+Same flow for snippets, chapters, and full books: **read the document as normal text**, sanitize, verify, deliver. No tracking files.
 
-## Modes
+## Standard flow
 
-| Mode | Scope | Tracking file |
-| --- | --- | --- |
-| **snippet** | Paragraph to few pages | Optional |
-| **section** | One chapter or major section | Recommended |
-| **document** | Full article, report, or book | Required |
+1. Read the full source (or user-selected section) in order.
+2. Classify context and mark prose vs syntax ([context-allowlist.md](context-allowlist.md)).
+3. Scan for pattern clusters ([detection-patterns.md](detection-patterns.md)).
+4. Edit prose: hyphen joins first ([hyphen-break-patterns.md](hyphen-break-patterns.md)), then connectors, vagueness, punctuation, structure.
+5. Final pass: confirm **zero hyphen joins** in prose.
+6. Return sanitized document and a short inline report.
 
-## Intake (section and document)
+## Long documents
 
-1. Classify context ([context-allowlist.md](context-allowlist.md)).
-2. Record host skills and prose vs syntax regions.
-3. Create or open `.copy-sanitizer-track.md` ([tracking-file.md](tracking-file.md)).
+For books or large markdown files:
 
-## Document chunk loop
+- Work through the file in reading order (optional mental chunks by chapter).
+- Keep rolling awareness of repeated patterns; no external ledger.
+- Deliver one complete sanitized file plus report when done.
 
-1. Split at `##` or chapter boundaries; overlap 1–2 paragraphs if a cluster spans edges.
-2. Per chunk: first scan → sanitize → second scan → append tracking rows.
-3. Roll up document metrics; write `final_report`.
-4. Deliver sanitized document and tracking file.
+Do not create `.copy-sanitizer-track.md` or similar side files unless the user explicitly asks.
 
-## Edit pass order (prose only)
+## Edit pass order (prose)
 
-1. Structure and rhythm
-2. Connector load
-3. Vague vocabulary clusters
-4. Punctuation density
-5. Hyphen-break joins ([hyphen-break-patterns.md](hyphen-break-patterns.md))
+1. Hyphen joins (remove all in prose)
+2. Structure and rhythm
+3. Connector load
+4. Vague vocabulary clusters
+5. Punctuation density
 6. Template symmetry (not required skill layout)
 
-## Stop and handoff
+## Stop conditions
 
-- Stop at residual `low`, voice risk, or user change cap.
-- Update `progress`, `unresolved_sections`, and context in `notes` when pausing.
+- Prose passes zero hyphen join check
+- Residual patterns are low or further edits risk voice
+- User change cap reached
