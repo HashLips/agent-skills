@@ -1,48 +1,42 @@
 # Scoring Heuristics
 
-Apply to **prose regions** only. Syntax follows [context-allowlist.md](context-allowlist.md).
+Apply to **copy** the user wants naturalized. Skip [preserve-regions.md](preserve-regions.md).
 
 ## Hyphen joins (hard gate)
 
 | State | Rule |
 | --- | --- |
-| **Before** | Count every `\b\w+-\w+\b` and prefix/slash joins in prose |
-| **After** | Count must be **zero** in prose |
+| **Before** | Count glued joins in readable sentences |
+| **After** | **Zero** in copy (allowed literals excepted) |
 
-No warn/flag tiers for output: all prose hyphen joins are removed. Clustering only sets edit order.
-
-## Punctuation Density (per 1,000 prose words)
+## Punctuation (per 1,000 words)
 
 | Signal | Warn | Flag |
 | --- | --- | --- |
-| Em dashes in prose | ≥ 4 | ≥ 8 |
+| Em dashes | ≥ 4 | ≥ 8 |
 | Double dashes | ≥ 2 | ≥ 5 |
 | Semicolons | ≥ 6 | ≥ 12 |
-| Colons (prose) | ≥ 8 | ≥ 15 |
+| Colons | ≥ 8 | ≥ 15 |
 | Ellipsis | ≥ 3 | ≥ 6 |
 
-Label/value list lines do not count toward em dash density.
+## Connectors and vague phrasing
 
-## Connector and Vague Vocab Scores
+Prioritize **clusters**; use categories from [detection-patterns.md](detection-patterns.md).
 
-Use category repetition from [detection-patterns.md](detection-patterns.md). Clustered = prioritize; isolated = fix if quick without voice drift.
+## Structural sameness
 
-## Structural Sameness
+Flag when 3+ tells co-occur in one section.
 
-Flag when 3+ structural tells co-occur in a section.
-
-## Residual Pattern Confidence (informal)
+## Residual feel (informal)
 
 | Level | Meaning |
 | --- | --- |
-| **low** | Prose passes zero hyphen join check; few other clusters remain |
-| **medium** | Hyphen joins cleared; some connector or vagueness clusters left by choice |
-| **high** | Major clusters remain or voice would break if pushed further |
+| **low** | Hyphen check passed; copy reads naturally for this author |
+| **medium** | Hyphens cleared; some connector or vagueness left to protect voice |
+| **high** | Major habits remain or more editing would harm voice |
 
-## Inline report (no tracking file)
+## Inline report
 
-Include in the message to the user:
-
-- Whether prose passed zero hyphen join check
-- Other pattern types touched
-- Approximate change level and any leftover hotspots
+- Hyphen check: pass / notes
+- Pattern types touched
+- Rough change level

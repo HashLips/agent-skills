@@ -1,37 +1,34 @@
 # Workflow
 
-Same flow for snippets, chapters, and full books: **read the document as normal text**, sanitize, verify, deliver. No tracking files.
+Same flow for a paragraph, email, or full manuscript: **read the copy**, sanitize, verify, return.
 
 ## Standard flow
 
-1. Read the full source (or user-selected section) in order.
-2. Classify context and mark prose vs syntax ([context-allowlist.md](context-allowlist.md)).
-3. Scan for pattern clusters ([detection-patterns.md](detection-patterns.md)).
-4. Edit prose: hyphen joins first ([hyphen-break-patterns.md](hyphen-break-patterns.md)), then connectors, vagueness, punctuation, structure.
-5. Final pass: confirm **zero hyphen joins** in prose.
-6. Return sanitized document and a short inline report.
+1. Read the full text in order.
+2. Note preserve regions ([preserve-regions.md](preserve-regions.md)).
+3. Scan for clusters ([detection-patterns.md](detection-patterns.md)).
+4. Edit: hyphen joins first, then rhythm, connectors, vague phrasing, punctuation.
+5. Verify zero hyphen joins in copy ([hyphen-break-patterns.md](hyphen-break-patterns.md)).
+6. Return sanitized copy and a short report.
 
-## Long documents
+## Long copy
 
-For books or large markdown files:
+- Work in reading order; optional mental breaks at chapter or section boundaries.
+- Keep awareness of repeated habits across the whole piece.
+- One complete sanitized text at the end.
 
-- Work through the file in reading order (optional mental chunks by chapter).
-- Keep rolling awareness of repeated patterns; no external ledger.
-- Deliver one complete sanitized file plus report when done.
+No tracking files unless the user asks.
 
-Do not create `.copy-sanitizer-track.md` or similar side files unless the user explicitly asks.
+## Edit pass order
 
-## Edit pass order (prose)
-
-1. Hyphen joins (remove all in prose)
+1. Hyphen joins
 2. Structure and rhythm
-3. Connector load
-4. Vague vocabulary clusters
+3. Connectors
+4. Vague phrasing clusters
 5. Punctuation density
-6. Template symmetry (not required skill layout)
 
-## Stop conditions
+## Stop
 
-- Prose passes zero hyphen join check
-- Residual patterns are low or further edits risk voice
+- Hyphen check passed and voice still sounds like the author
+- Further edits would change meaning or flatten tone
 - User change cap reached

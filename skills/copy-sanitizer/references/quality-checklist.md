@@ -1,31 +1,27 @@
 # Quality Checklist
 
-Run before delivery.
+## Copy and voice
 
-## Hyphen join gate (required)
-
-- [ ] Every `word-word` join removed from **running prose**.
-- [ ] No new hyphen joins introduced in the rewrite.
-- [ ] Allowlist syntax intact (paths, code, list markers, label lines).
-
-## Document handling
-
-- [ ] Full document read and sanitized as normal text.
-- [ ] No `.copy-sanitizer-track.md` or side ledger unless user explicitly requested.
-
-## Pattern and voice
-
-- [ ] Pattern categories used; examples treated as samples only.
-- [ ] Meaning and voice preserved in prose.
+- [ ] Full text read; preserve regions respected.
+- [ ] Meaning and facts unchanged.
+- [ ] Voice still sounds like the same author.
 - [ ] No fake humanity.
-- [ ] Host skill layout not flattened.
+
+## Hyphen gate
+
+- [ ] Zero hyphen joins in copy (allowed literals only).
+- [ ] No new hyphen joins added.
+
+## Patterns
+
+- [ ] Categories used; examples not treated as a ban list.
+- [ ] Clusters fixed before minor one-offs.
+
+## Markup (when source was markdown)
+
+- [ ] No stray `**`, `#`, backticks, or link brackets in final copy (unless user asked to keep markdown).
 
 ## Delivery
 
-- [ ] Complete sanitized document returned.
-- [ ] Short inline report included (patterns touched, hyphen check passed).
-
-## Skill package (when editing skill repos)
-
-- [ ] `SKILL.md` shape and kebab paths preserved.
-- [ ] Prose inside skills still passes zero hyphen join rule.
+- [ ] Complete sanitized copy returned.
+- [ ] Short inline report included.

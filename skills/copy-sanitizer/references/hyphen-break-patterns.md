@@ -2,59 +2,44 @@
 
 ## Core rule (non-negotiable)
 
-**Sanitized running prose has zero hyphen joins between words.**
-
-If two ideas were glued as `word-word`, unpack them:
+**Sanitized copy has zero hyphen joins between words** in sentences the author would read aloud.
 
 | Instead of | Write |
 | --- | --- |
 | human-readable | readable, easy to read, plain language |
-| re-scan | scan again |
+| re-scan | read again, check again |
 | high-impact results | strong results, results that matter |
-| AI-powered tool | tool that uses AI, tool with AI features |
+| AI-powered tool | tool that uses AI |
 
-Use separate words, a short rephrase, or one plain modifier. **Do not** replace one hyphen join with another.
+Use separate words or a short rephrase. **Do not** swap one hyphen pile for another.
 
-This applies to **all** prose hyphen joins: editorial prefixes (`re-`, `de-`), technology labels (`AI-`), stacked modifiers, metric joins (`before/after`), and consultant compounds (`end-to-end` → `from start to finish` or `full`).
+Applies to editorial prefixes (`re-`, `de-`), label prefixes (`AI-`), stacked modifiers, and metric joins (`before/after` in running copy).
 
 ## Input vs output
 
 | Phase | Rule |
 | --- | --- |
-| **Detect** | Flag every `\b\w+-\w+\b` in prose (plus prefix/slash join shapes). |
-| **Edit** | Remove or rephrase every flagged join in prose. |
-| **Verify** | Final pass: prose must match zero hyphen joins. |
+| **Detect** | Every `\b\w+-\w+\b` in copy (plus prefix/slash joins). |
+| **Edit** | Unpack or rephrase each one in readable sentences. |
+| **Verify** | Zero hyphen joins remain in copy. |
 
-Clustering still guides priority; a single join in prose should still be fixed on the final pass.
+## Exceptions (preserve literals)
 
-## What is not prose (do not unpack)
+Do not break:
 
-See [context-allowlist.md](context-allowlist.md):
+- Proper nouns and official product names that include hyphens (user or dictionary standard)
+- URLs, code, SKUs, and user-marked do-not-edit blocks ([preserve-regions.md](preserve-regions.md))
 
-- Paths and filenames (`copy-sanitizer`)
-- Frontmatter, code, URLs, inline code
-- List markers (`- item`)
-- Label lines (`- **name** — value`)
-- Em dash between label and value is layout, not a word join
-
-## Detection shapes (illustrative)
-
-| Shape | Sample forms only |
-| --- | --- |
-| Editorial prefix join | `re-…`, `de-…` |
-| Technology prefix join | `AI-…`, `ML-…` |
-| Stacked modifiers | two+ hyphen modifiers before one noun |
-| `over-` repetition | several in one section |
-| Metric-style join | `before/after`, `pre/post` in a sentence |
+When a hyphen is part of a **fixed name or literal**, keep it. When it is **assembled prose**, unpack it.
 
 ## Forbidden on output
 
-- Inventing new `word-word` forms in the rewrite
-- Swapping piles (`machine-written` → `model-written`)
-- Leaving "readable" style compounds because they sound grammatical
+- New `word-word` forms in the rewrite
+- Leaving glued compounds because they sound grammatical
+- Unpacking trademark or legal names the user said to keep
 
-## Self-check before delivery
+## Self-check
 
-1. Search sanitized **prose** for `\b[a-zA-Z]+-[a-zA-Z]+\b` and `\b(de|re)-[a-z]+`.
-2. Search for `AI-` and similar prefix joins in sentences.
-3. If any match outside the allowlist, rephrase again.
+1. Search copy for `\b[a-zA-Z]+-[a-zA-Z]+\b` and `\b(de|re)-[a-z]+`.
+2. Confirm each remaining hyphen is an allowed literal, not prose glue.
+3. Rephrase anything else.
