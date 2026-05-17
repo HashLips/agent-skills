@@ -5,7 +5,7 @@ description: Naturalizes AI-assisted copy by removing statistical fingerprints w
 
 # Copy Sanitizer
 
-Standalone skill for **copy and prose only**: articles, emails, books, scripts, ads, social posts, blurbs, essays, and any pasted text. Format agnostic (plain text, HTML, markdown, or other). Not a formatter, not a rewriter.
+Standalone skill for **copy and prose only**: articles, emails, books, scripts, ads, social posts, blurbs, essays, and any pasted text. Format agnostic (plain text, HTML, markdown, or other).
 
 ## Disclaimer
 
