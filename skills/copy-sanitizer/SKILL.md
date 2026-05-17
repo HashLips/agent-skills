@@ -1,64 +1,62 @@
 ---
 name: copy-sanitizer
-description: Sanitizes and naturalizes generated copy by removing statistical fingerprints while preserving tone, structure, intent, and host-skill layout rules. Use when text sounds polished but obviously from a model, when cleaning drafts without rewriting voice, or when processing any length document as normal text.
+description: Naturalizes AI-assisted copy by removing statistical fingerprints while preserving the author's tone, meaning, and intent. Use when drafts sound polished but machine-smooth, when glued hyphen words need plain phrasing, or when any body of text needs a light pass to read more naturally.
 ---
 
 # Copy Sanitizer
 
-Light editorial pass on running prose. Removes clustered generated habits without breaking voice, host skills, or required markdown syntax.
+Standalone skill for **copy and prose only**: articles, emails, books, scripts, ads, social posts, blurbs, essays, and any pasted text. Format agnostic (plain text, HTML, markdown, or other). Not a formatter, not a rewriter.
 
 ## Disclaimer
 
-This skill exists to support **creative authors who write with AI** as a collaborator. The goal is to smooth clustered model habits so the author's voice reads more naturally on the page.
+This skill supports **creative authors who write with AI** as a collaborator. The goal is to smooth clustered model habits so the author's voice reads more naturally.
 
-It is **not** for bypassing human review, impersonation, or "proving" text is human. Do not use it to misrepresent authorship, evade disclosure policies, or game detectors. Use it to polish drafts the author already owns and intends to publish under their name.
+It is **not** for bypassing human review, impersonation, or gaming detectors. Do not misrepresent authorship or evade disclosure. Polish drafts the author owns and intends to publish.
 
 ## Core Rules
 
-1. **Zero hyphen joins in prose** — Running prose must not contain words glued with hyphens (`human-readable`, `re-scan`, stacked modifiers). Unpack to separate words or rephrase. Never add hyphen joins in the rewrite. Details: [references/hyphen-break-patterns.md](references/hyphen-break-patterns.md).
-2. **Pattern over word list** — Score shapes (joins, connectors, vagueness, sameness); reference examples are illustrative only.
-3. **Context first** — Classify document type and host skills before editing ([references/context-allowlist.md](references/context-allowlist.md)).
-4. **Prose only** — Do not strip kebab paths, list markers, `- **label** — value` lines, frontmatter, or code.
-5. **Light touch** — Edit clustered repeats; preserve meaning, voice, and layout contracts.
-6. **No fake humanity** — No typos, forced casualness, or invented mistakes.
-7. **Read the whole document** — Treat the file as normal text end to end. No sidecar tracking files or session ledgers.
+1. **Copy first** — Edit readable text the author would speak or publish. Ignore file format unless the user marks regions to preserve.
+2. **Zero hyphen joins in copy** — No `word-word` glued forms in output (`human-readable` → `easy to read`). Never add hyphen joins. See [references/hyphen-break-patterns.md](references/hyphen-break-patterns.md).
+3. **Pattern over word list** — Fix shapes (joins, connectors, vagueness, sameness); examples in references are illustrative.
+4. **Light touch** — Small edits where patterns cluster; keep meaning, facts, and voice.
+5. **No fake humanity** — No typos, slang spikes, or forced casualness.
+6. **Read all of it** — Work through the full text the user gives. No side tracking files.
+7. **Strip markup for readers** — If the paste has markdown (`**bold**`, `#` headings, link syntax), remove symbols; deliver plain copy for books and print ([references/preserve-regions.md](references/preserve-regions.md)).
 
 ## Workflow
 
-1. **Intake** — Confirm source document, context, and host skills (e.g. agent-skill-creator, md-design-system).
-2. **Read and scan** — Analyze full text; mark prose vs syntax regions per [references/detection-patterns.md](references/detection-patterns.md).
-3. **Sanitize** — Minimal edits per [references/editorial-principles.md](references/editorial-principles.md); strongest pattern clusters first.
-4. **Verify** — Re-read prose; confirm **no hyphen joins** remain in sentences (allowlist syntax only).
-5. **Deliver** — Sanitized document plus a short inline report. Run [references/quality-checklist.md](references/quality-checklist.md).
+1. **Intake** — Confirm the copy, audience, and any lines or blocks the user says not to touch.
+2. **Read and scan** — [references/detection-patterns.md](references/detection-patterns.md).
+3. **Sanitize** — [references/editorial-principles.md](references/editorial-principles.md); strongest clusters first.
+4. **Verify** — Zero hyphen joins in copy; preserve regions per [references/preserve-regions.md](references/preserve-regions.md).
+5. **Deliver** — Sanitized copy plus a short inline report. [references/quality-checklist.md](references/quality-checklist.md).
 
 ## Constraints
 
-- Not for bypassing human verification, detectors, or disclosure requirements.
-- Not a full rewrite, ghostwriting, or voice replacement engine.
-- Not a pinned vocabulary ban or find-replace word list.
-- Not a license to break agent-skill-creator or md-design-system layout when sanitizing skill repos.
-- Not fake-error injection or hype stripping of domain-standard terms used once.
-- **No hyphen joins in sanitized prose output**, including editorial coinages and "readable" style compounds.
+- Not a full rewrite or ghostwriting.
+- Not a vocabulary ban or find-replace list.
+- Not fake errors or hype stripping of a single precise domain term.
+- Not bypassing disclosure, review, or detector policies.
 
 ## Output Contract
 
-- **Sanitized copy** — Full document returned; meaning and layout contracts intact.
-- **Short report** — Pattern types addressed, approximate change level, residual notes.
-- **Hyphen join check** — Confirm prose has zero `word-word` hyphen joins outside the allowlist.
+- **Sanitized copy** — Full text returned; same meaning and intent.
+- **Short report** — Patterns addressed, change level, hyphen check passed or notes.
+- **Voice** — Should still sound like the same author, more natural.
 
 ## Reference Index
 
-- **Required dashes vs prose (allowlist):** [references/context-allowlist.md](references/context-allowlist.md)
-- **Zero hyphen joins in prose:** [references/hyphen-break-patterns.md](references/hyphen-break-patterns.md)
-- **Generic detection categories:** [references/detection-patterns.md](references/detection-patterns.md)
-- **Density scoring:** [references/scoring-heuristics.md](references/scoring-heuristics.md)
-- **What to change vs preserve:** [references/editorial-principles.md](references/editorial-principles.md)
-- **Long documents (in-memory only):** [references/workflow.md](references/workflow.md)
-- **Pre-delivery QA:** [references/quality-checklist.md](references/quality-checklist.md)
+- **Regions not to edit:** [references/preserve-regions.md](references/preserve-regions.md)
+- **Zero hyphen joins:** [references/hyphen-break-patterns.md](references/hyphen-break-patterns.md)
+- **What to detect:** [references/detection-patterns.md](references/detection-patterns.md)
+- **How hard to push:** [references/scoring-heuristics.md](references/scoring-heuristics.md)
+- **How to edit:** [references/editorial-principles.md](references/editorial-principles.md)
+- **Long text:** [references/workflow.md](references/workflow.md)
+- **QA:** [references/quality-checklist.md](references/quality-checklist.md)
 
 ## When To Use This Skill
 
-- Naturalize or sanitize copy without a full rewrite.
-- Prose has glued words with hyphens that should be plain phrasing.
-- Drafts sound too smooth, connector-heavy, or vague.
-- Sanitize a skill repo without breaking `SKILL.md` or reference layout.
+- AI-assisted draft sounds smooth but not like the author.
+- Copy has hyphen-glued words that should be plain speech.
+- Connectors, buzz phrasing, or rhythm feel templated.
+- Author wants a light naturalizing pass, not a new article.
