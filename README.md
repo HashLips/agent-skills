@@ -14,15 +14,11 @@ This is a work in progress and a build-in-public snapshot. It is for our own use
 
 ## Disclaimer
 
-**Most of the content in this repository is AI-generated** (or produced with significant AI assistance), then selected and edited as needed. It is not a guarantee of accuracy, completeness, or fit for a given purpose; treat it like any other generated material and verify what you adopt.
+**Most of the content here is AI-generated** (or produced with significant AI assistance), then picked over and edited by us. We try to keep things useful, but we cannot promise accuracy, completeness, or that something will fit your situation—please sanity-check anything you adopt.
 
-**These skills and agents are experimental.** Their behaviour and side effects are not fully known or guaranteed. They may change at any time, and outcomes can vary depending on your environment, your tools, and how you use them. Content may be wrong for your situation or unsafe without human review (for example: running commands, changing files, or following security-related guidance). This is not legal, financial, or professional advice.
+**These skills and agents are experimental.** Behaviour and side effects can vary with your environment, tools, and how you use them. Content may change at any time. A quick human review is a good idea before running commands, changing files, or acting on security-related guidance. Nothing here is legal, financial, or professional advice.
 
-**The authors and contributors are not liable** for any issues, claims, damages, data loss, security incidents, or any other loss or harm of any kind arising from your use of this repository, its skills, its agents, or any copy or derivative work—to the maximum extent allowed by law.
-
-**Do not use or apply this material on systems you do not own or are not authorised to change.**
-
-**Use at your own risk.** By using or copying anything in this repository, you do so at your own discretion and you agree to the above.
+**Use at your own risk.** If you use or copy anything from this repository, you do so on your own judgment. The authors and contributors to this repository are not responsible for any loss, damage, or other harm that may result.
 
 ---
 
