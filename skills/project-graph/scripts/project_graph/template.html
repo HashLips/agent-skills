@@ -1,0 +1,1697 @@
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>__PAGE_TITLE__</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #07070b; --bg-soft: #0d0e14; --panel: #12141c; --panel-2: #181b25;
+    --line: #262a38; --line-soft: #1d2030; --ink: #e9ebf2; --muted: #9aa1b4;
+    --faint: #6b7186; --accent: #8fa9ff; --radius: 14px; --header-h: 58px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 75% -10%, rgba(70, 90, 160, 0.16), transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, rgba(120, 80, 160, 0.10), transparent 60%),
+      var(--bg);
+    color: var(--ink);
+    overflow: hidden;
+  }
+  button { font-family: inherit; }
+
+  header {
+    height: var(--header-h);
+    display: flex; align-items: center; gap: 18px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--line-soft);
+    background: rgba(10, 11, 16, 0.82);
+    backdrop-filter: blur(10px);
+    position: relative; z-index: 30;
+  }
+  .brand { display: flex; flex-direction: column; line-height: 1.15; min-width: 130px; }
+  .brand b { font-size: 0.98rem; letter-spacing: 0.04em; }
+  .brand span { font-size: 0.68rem; color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase; }
+  nav { display: flex; gap: 4px; }
+  nav button {
+    border: 1px solid transparent; background: transparent; color: var(--muted);
+    padding: 7px 13px; border-radius: 9px; font-size: 0.84rem; cursor: pointer;
+    transition: color .15s, background .15s;
+  }
+  nav button:hover { color: var(--ink); background: rgba(255,255,255,0.05); }
+  nav button.active { color: var(--ink); background: rgba(143, 169, 255, 0.13); border-color: rgba(143, 169, 255, 0.32); }
+  .header-search { margin-left: auto; position: relative; width: min(330px, 30vw); }
+  .header-search input {
+    width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    color: var(--ink); padding: 8px 12px; font-size: 0.85rem; outline: none;
+  }
+  .header-search input:focus { border-color: rgba(143,169,255,0.5); }
+  #search-results {
+    position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px;
+    max-height: 380px; overflow: auto; display: none;
+    box-shadow: 0 18px 48px rgba(0,0,0,0.55);
+  }
+  #search-results.open { display: block; }
+  .search-item { display: flex; align-items: center; gap: 9px; padding: 8px 12px; cursor: pointer; font-size: 0.84rem; }
+  .search-item:hover { background: rgba(143,169,255,0.10); }
+  .search-item .s-dir { color: var(--faint); font-size: 0.7rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .search-item .cat-mini { margin-left: auto; color: var(--faint); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; flex: 0 0 auto; }
+  .header-stats { display: flex; gap: 14px; color: var(--faint); font-size: 0.74rem; white-space: nowrap; }
+  .header-stats b { color: var(--muted); font-weight: 600; }
+
+  #app { height: calc(100vh - var(--header-h)); position: relative; }
+  .tab { display: none; height: 100%; }
+  .tab.active { display: block; }
+  .dot { width: 9px; height: 9px; border-radius: 99px; flex: 0 0 auto; border: 1px solid rgba(255,255,255,0.35); }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem;
+    padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line);
+    background: rgba(255,255,255,0.03); color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap;
+  }
+  .chip.cat { color: var(--c, var(--muted)); border-color: color-mix(in srgb, var(--c, #888) 45%, transparent); background: color-mix(in srgb, var(--c, #888) 10%, transparent); }
+  .chip.flow { cursor: pointer; text-transform: none; letter-spacing: 0; font-size: 0.74rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+  .chip.flow:hover { border-color: rgba(143,169,255,0.55); color: var(--ink); }
+  .chip.pkg { text-transform: none; letter-spacing: 0; font-size: 0.72rem; }
+
+  .scroll-tab { overflow: auto; padding: 18px 20px 40px; height: 100%; }
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px;
+    position: sticky; top: -18px;
+    background: linear-gradient(rgba(7,7,11,0.96), rgba(7,7,11,0.88));
+    padding: 12px 0 10px; z-index: 5;
+  }
+  .toolbar input[type="text"], .toolbar select {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 9px;
+    color: var(--ink); padding: 7px 11px; font-size: 0.82rem; outline: none;
+  }
+  .toolbar input[type="text"]:focus { border-color: rgba(143,169,255,0.5); }
+  .pill {
+    border: 1px solid var(--line); background: rgba(255,255,255,0.03); color: var(--muted);
+    border-radius: 999px; font-size: 0.76rem; padding: 5px 12px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .pill.on { border-color: color-mix(in srgb, var(--c, var(--accent)) 60%, transparent); color: var(--ink); background: color-mix(in srgb, var(--c, var(--accent)) 13%, transparent); }
+  .result-count { color: var(--faint); font-size: 0.76rem; margin-left: auto; }
+  .ghost-btn {
+    border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+    border-radius: 9px; padding: 6px 11px; font-size: 0.76rem; cursor: pointer;
+  }
+  .ghost-btn:hover { color: var(--ink); border-color: rgba(143,169,255,0.45); }
+  .ask-btn {
+    border: none; border-radius: 9px; padding: 7px 14px; font-size: 0.78rem; cursor: pointer;
+    background: linear-gradient(135deg, #8fa9ff, #c08fff); color: #0b0d16; font-weight: 700;
+    box-shadow: 0 4px 18px rgba(143, 169, 255, 0.35);
+    transition: filter .15s, transform .12s;
+  }
+  .ask-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+  .ask-btn:disabled { filter: saturate(0.4); cursor: default; transform: none; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line-soft); border-radius: var(--radius);
+    padding: 13px 14px 11px; cursor: pointer; display: flex; flex-direction: column; gap: 8px;
+    transition: transform .12s, border-color .12s, background .12s;
+    border-top: 2px solid var(--c, var(--line)); min-height: 116px;
+  }
+  .card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--c, #888) 50%, var(--line)); background: var(--panel-2); }
+  .card .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .card h4 { margin: 0; font-size: 0.95rem; font-weight: 600; word-break: break-all; }
+  .card .dirline { color: var(--faint); font-size: 0.7rem; word-break: break-all; margin-top: -4px; }
+  .card p { margin: 0; font-size: 0.78rem; color: var(--muted); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card .foot { margin-top: auto; display: flex; gap: 12px; color: var(--faint); font-size: 0.7rem; padding-top: 4px; flex-wrap: wrap; }
+
+  #tab-flows.active, #tab-folders.active { display: grid; grid-template-columns: 320px 1fr; height: 100%; }
+  .side-col {
+    border-right: 1px solid var(--line-soft); overflow: auto; padding: 14px;
+    display: flex; flex-direction: column; gap: 4px; background: rgba(13,14,20,0.6);
+  }
+  .side-col input {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 9px;
+    color: var(--ink); padding: 7px 11px; font-size: 0.82rem; outline: none; margin-bottom: 8px;
+  }
+  .list-row {
+    display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px;
+    font-size: 0.82rem; color: var(--muted); cursor: pointer;
+  }
+  .list-row:hover { background: rgba(255,255,255,0.05); color: var(--ink); }
+  .list-row.sel { background: rgba(143,169,255,0.14); color: var(--ink); outline: 1px solid rgba(143,169,255,0.4); }
+  .list-row .count { margin-left: auto; color: var(--faint); font-size: 0.72rem; flex: 0 0 auto; }
+  .list-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .detail-col { overflow: auto; padding: 18px 20px 40px; }
+  .detail-col h2 { margin: 0 0 4px; font-size: 1.1rem; word-break: break-all; }
+  .detail-col .sub { color: var(--faint); font-size: 0.8rem; margin-bottom: 14px; }
+  .detail-col .desc { color: var(--muted); font-size: 0.86rem; line-height: 1.55; margin: 0 0 14px; max-width: 760px; }
+
+  .depth-group { margin-bottom: 14px; }
+  .depth-head {
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--faint);
+    font-weight: 600; border-bottom: 1px solid var(--line-soft); padding-bottom: 5px; margin-bottom: 6px;
+  }
+  .conn-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 8px; cursor: pointer; font-size: 0.83rem; }
+  .conn-item:hover { background: rgba(143,169,255,0.10); }
+  .conn-item .f-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .conn-item .f-path small { color: var(--faint); }
+  .conn-item .kind { margin-left: auto; color: var(--faint); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; flex: 0 0 auto; }
+
+  .tree-root, .tree-children { list-style: none; margin: 0; padding: 0; }
+  .tree-children { padding-left: 20px; border-left: 1px dashed rgba(120, 138, 198, 0.25); margin-left: 9px; }
+  .tree-row {
+    display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 8px;
+    cursor: pointer; user-select: none; color: #d6dbee; font-size: 0.86rem;
+  }
+  .tree-row:hover { background: rgba(143,169,255,0.10); }
+  .tree-toggle {
+    width: 18px; height: 18px; border: 1px solid rgba(255,255,255,0.18); border-radius: 5px;
+    background: rgba(255,255,255,0.05); color: #cdd5f5; font-size: 11px; line-height: 15px;
+    text-align: center; padding: 0; cursor: pointer; flex: 0 0 auto;
+  }
+  .tree-toggle.spacer { border-color: transparent; background: transparent; cursor: default; }
+  .tree-meta { margin-left: auto; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); white-space: nowrap; }
+  .tree-row.dir-row b { font-weight: 600; }
+
+  #tab-graph { display: none; grid-template-columns: 252px 1fr; }
+  #tab-graph.active { display: grid; }
+  .rail {
+    border-right: 1px solid var(--line-soft); background: rgba(13, 14, 20, 0.65);
+    padding: 14px; overflow: auto; display: flex; flex-direction: column; gap: 14px;
+  }
+  .rail h3 { margin: 0; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--faint); font-weight: 600; }
+  .rail-group { display: flex; flex-direction: column; gap: 8px; }
+  .cat-row { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); cursor: pointer; user-select: none; padding: 3px 6px; border-radius: 7px; }
+  .cat-row:hover { background: rgba(255,255,255,0.04); color: var(--ink); }
+  .cat-row input { accent-color: var(--accent); margin: 0; }
+  .cat-row .count { margin-left: auto; color: var(--faint); font-size: 0.72rem; }
+  .rail select {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 9px;
+    color: var(--ink); padding: 7px 9px; font-size: 0.78rem; outline: none; width: 100%;
+  }
+  .rail .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .toggle-row { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); cursor: pointer; user-select: none; }
+  .toggle-row input { accent-color: var(--accent); margin: 0; }
+  #graph-wrap { position: relative; overflow: hidden; }
+  #graph { width: 100%; height: 100%; display: block; cursor: default; }
+  #graph.panning { cursor: grabbing; }
+  #graph-hud {
+    position: absolute; left: 12px; bottom: 10px; font-size: 0.72rem; color: var(--faint);
+    background: rgba(10,11,16,0.7); border: 1px solid var(--line-soft);
+    padding: 5px 10px; border-radius: 8px; pointer-events: none;
+  }
+  #graph-hint { position: absolute; right: 12px; bottom: 10px; font-size: 0.7rem; color: var(--faint); pointer-events: none; }
+  .gnode { stroke: rgba(8, 10, 20, 0.9); stroke-width: 1.1; cursor: pointer; }
+  .gnode.dim { opacity: 0.08; }
+  .gnode.sel { stroke: #fff; stroke-width: 2.4; }
+  .gedge { stroke: #38415f; stroke-opacity: 0.4; stroke-width: 0.8; }
+  .gedge.dim { opacity: 0.05; }
+  .gedge.hot { stroke: var(--accent); stroke-opacity: 0.95; stroke-width: 1.6; }
+  .glabel {
+    font-size: 10px; fill: #d7ddf0;
+    paint-order: stroke; stroke: rgba(5,6,10,0.85); stroke-width: 2.5px;
+    pointer-events: none;
+  }
+  .glabel.dim { opacity: 0.06; }
+  .gcluster {
+    font-size: 15px; font-weight: 600; fill: #aab4d4; letter-spacing: 0.08em;
+    paint-order: stroke; stroke: rgba(5,6,10,0.9); stroke-width: 4px;
+    pointer-events: none; text-transform: uppercase;
+  }
+  #tooltip {
+    position: fixed; z-index: 60; pointer-events: none;
+    background: rgba(14, 16, 24, 0.95); border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px 11px; font-size: 0.78rem; display: none; max-width: 300px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  #tooltip .t-name { font-weight: 600; margin-bottom: 2px; word-break: break-all; }
+  #tooltip .t-sub { color: var(--muted); font-size: 0.72rem; }
+
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; align-items: start; }
+  .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat-card { background: var(--panel); border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 13px 15px; }
+  .stat-card b { display: block; font-size: 1.45rem; font-weight: 700; }
+  .stat-card span { color: var(--faint); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .panel { background: var(--panel); border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 15px 16px; }
+  .panel h3 { margin: 0 0 12px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--faint); font-weight: 600; }
+  .bar-row { display: grid; grid-template-columns: 130px 1fr 44px; align-items: center; gap: 10px; margin-bottom: 7px; font-size: 0.78rem; }
+  .bar-row .name { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-row .track { height: 8px; border-radius: 99px; background: rgba(255,255,255,0.05); overflow: hidden; }
+  .bar-row .fill { display: block; height: 100%; border-radius: 99px; }
+  .bar-row .num { color: var(--faint); text-align: right; font-size: 0.72rem; }
+  .rank-item { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 8px; cursor: pointer; font-size: 0.83rem; color: var(--muted); }
+  .rank-item:hover { background: rgba(255,255,255,0.05); color: var(--ink); }
+  .rank-item .r-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rank-item .num { margin-left: auto; color: var(--faint); font-size: 0.74rem; flex: 0 0 auto; }
+  .empty-note { color: var(--faint); font-size: 0.8rem; }
+
+  #drawer {
+    position: fixed; top: var(--header-h); right: 0; bottom: 0; width: min(480px, 92vw);
+    background: rgba(15, 17, 25, 0.97); border-left: 1px solid var(--line);
+    transform: translateX(105%); transition: transform 0.22s ease; z-index: 40;
+    display: flex; flex-direction: column; box-shadow: -24px 0 60px rgba(0,0,0,0.5);
+  }
+  #drawer.open { transform: translateX(0); }
+  #drawer-scroll { overflow: auto; flex: 1; }
+  #drawer-close {
+    position: absolute; top: 10px; right: 12px; z-index: 3; width: 30px; height: 30px;
+    border-radius: 99px; border: 1px solid var(--line); background: rgba(10,11,16,0.8);
+    color: var(--ink); font-size: 15px; cursor: pointer;
+  }
+  .drawer-body { padding: 16px 18px 30px; }
+  .drawer-body h2 { margin: 8px 0 2px; font-size: 1.2rem; line-height: 1.25; word-break: break-all; }
+  .drawer-path { color: var(--faint); font-size: 0.74rem; word-break: break-all; margin-bottom: 10px; }
+  .drawer-summary { color: var(--muted); font-size: 0.85rem; line-height: 1.5; margin: 0 0 12px; }
+  .drawer-stats { display: flex; gap: 16px; color: var(--faint); font-size: 0.74rem; margin: 10px 0 4px; flex-wrap: wrap; }
+  .drawer-stats b { color: var(--muted); }
+  .drawer-section-title {
+    margin: 18px 0 8px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--faint); font-weight: 600; border-bottom: 1px solid var(--line-soft); padding-bottom: 5px;
+  }
+  .drawer-actions { display: flex; gap: 8px; margin: 12px 0 2px; flex-wrap: wrap; }
+  .chips-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* ---------- living AI knowledge ---------- */
+  .ai-tag {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 0.62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.12em; color: #c7b3ff;
+  }
+  .ai-note {
+    border: 1px solid rgba(192,143,255,0.28); border-left: 3px solid #c08fff;
+    background: linear-gradient(135deg, rgba(143,169,255,0.07), rgba(192,143,255,0.05));
+    border-radius: 10px; padding: 10px 13px; margin: 0 0 14px;
+    color: var(--muted); font-size: 0.85rem; line-height: 1.55; max-width: 760px;
+  }
+  .ai-note .ai-tag { display: flex; margin-bottom: 5px; }
+  .know-item { padding: 7px 8px; border-radius: 8px; font-size: 0.83rem; color: var(--muted); }
+  .know-item b { color: var(--ink); font-weight: 600; }
+  .know-item .k-role { color: #c7b3ff; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; margin-left: 7px; }
+  .know-item p { margin: 3px 0 0; font-size: 0.78rem; color: var(--faint); line-height: 1.45; }
+  .flow-diagram-wrap {
+    background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius);
+    margin: 0 0 18px; overflow: auto; max-height: 62vh;
+  }
+  .flow-diagram-wrap svg { display: block; margin: 0 auto; }
+  .fd-label { font-size: 12px; fill: #e9ebf2; }
+  .fd-file { font-size: 9.5px; fill: #9aa1b4; }
+  .fd-edge-label { font-size: 10px; fill: #9aa1b4; paint-order: stroke; stroke: rgba(13,14,20,0.9); stroke-width: 3px; }
+
+  /* ---------- small windows ---------- */
+  @media (max-width: 980px) {
+    .header-stats { display: none; }
+    header { gap: 10px; padding: 0 10px; }
+    .header-search { width: min(220px, 34vw); }
+    nav { overflow-x: auto; scrollbar-width: none; }
+    nav button { padding: 6px 9px; font-size: 0.78rem; white-space: nowrap; }
+  }
+  @media (max-width: 760px) {
+    #tab-flows.active, #tab-folders.active { grid-template-columns: 1fr; grid-template-rows: minmax(140px, 32%) 1fr; }
+    .side-col { border-right: none; border-bottom: 1px solid var(--line-soft); }
+    #tab-graph.active { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .rail { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 18px; border-right: none; border-bottom: 1px solid var(--line-soft); max-height: 38vh; }
+    .card-grid { grid-template-columns: 1fr; }
+    .insight-grid { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 100px 1fr 36px; }
+    .toolbar { position: static; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><b>__BRAND__</b><span>Project Graph</span></div>
+  <nav id="tabs-nav">
+    <button data-tab="explorer" class="active">Explorer</button>
+    <button data-tab="flows">Flows</button>
+    <button data-tab="folders">Folders</button>
+    <button data-tab="graph">Graph</button>
+    <button data-tab="insights">Insights</button>
+  </nav>
+  <div class="header-search">
+    <input id="global-search" placeholder="Search files and flows..." autocomplete="off" />
+    <div id="search-results"></div>
+  </div>
+  <div class="header-stats" id="header-stats"></div>
+</header>
+
+<div id="app">
+  <section id="tab-explorer" class="tab active">
+    <div class="scroll-tab">
+      <div class="toolbar">
+        <input type="text" id="exp-search" placeholder="Filter files..." />
+        <span id="exp-cat-pills"></span>
+        <select id="exp-sort">
+          <option value="name">Sort: Name</option>
+          <option value="connections">Sort: Most connected</option>
+          <option value="loc">Sort: Most lines</option>
+          <option value="size">Sort: Largest</option>
+        </select>
+        <span class="result-count" id="exp-count"></span>
+      </div>
+      <div class="card-grid" id="exp-grid"></div>
+    </div>
+  </section>
+
+  <section id="tab-flows" class="tab">
+    <div class="side-col">
+      <input type="text" id="flow-search" placeholder="Filter flows..." />
+      <div id="flow-list"></div>
+    </div>
+    <div class="detail-col" id="flow-detail">
+      <h2>Flows</h2>
+      <div class="sub">Select a flow to see every file it touches, layer by layer.</div>
+    </div>
+  </section>
+
+  <section id="tab-folders" class="tab">
+    <div class="side-col" style="padding-top: 16px;">
+      <div class="btn-row" style="display:flex;gap:8px;margin-bottom:10px;">
+        <button class="ghost-btn" id="tree-expand">Expand all</button>
+        <button class="ghost-btn" id="tree-collapse">Collapse all</button>
+      </div>
+      <div class="empty-note">Folder structure mirrors the repository. Click a file to inspect it.</div>
+    </div>
+    <div class="detail-col"><ul class="tree-root" id="tree-root"></ul></div>
+  </section>
+
+  <section id="tab-graph" class="tab">
+    <div class="rail">
+      <div class="rail-group">
+        <h3>Categories</h3>
+        <div id="cat-filters"></div>
+        <div class="btn-row">
+          <button class="ghost-btn" id="cats-all">All</button>
+          <button class="ghost-btn" id="cats-none">None</button>
+        </div>
+      </div>
+      <div class="rail-group">
+        <h3>Flow focus</h3>
+        <select id="flow-focus"><option value="">No flow focus</option></select>
+      </div>
+      <div class="rail-group">
+        <h3>Display</h3>
+        <label class="toggle-row"><input type="checkbox" id="labels-toggle" /> Show labels</label>
+        <label class="toggle-row"><input type="checkbox" id="edges-toggle" checked /> Show connections</label>
+        <div class="btn-row"><button class="ghost-btn" id="reset-view">Reset view</button></div>
+      </div>
+    </div>
+    <div id="graph-wrap">
+      <svg id="graph" preserveAspectRatio="xMidYMid meet"></svg>
+      <div id="graph-hud"></div>
+      <div id="graph-hint">drag to pan &middot; scroll to zoom &middot; click a node for details</div>
+    </div>
+  </section>
+
+  <section id="tab-insights" class="tab">
+    <div class="scroll-tab">
+      <div class="toolbar">
+        <span class="result-count" style="margin-left:0">Derived from static analysis of the project graph</span>
+      </div>
+      <div class="stat-cards" id="stat-cards"></div>
+      <div class="insight-grid" id="insight-grid"></div>
+    </div>
+  </section>
+</div>
+
+<aside id="drawer">
+  <button id="drawer-close" aria-label="Close">&times;</button>
+  <div id="drawer-scroll"></div>
+</aside>
+
+<div id="tooltip"></div>
+
+<script>
+const DATA = __DATA__;
+
+/* ============ data prep ============ */
+const nodes = DATA.nodes;
+const edges = DATA.edges;
+const flows = DATA.flows;
+const nodesById = new Map(nodes.map(n => [n.id, n]));
+const flowsById = new Map(flows.map(f => [f.id, f]));
+const KNOW = DATA.knowledge || { present: false, overview: '', technologies: [], services: [], flows: {}, files: {}, notes: [] };
+const knowCount = KNOW.technologies.length + KNOW.services.length + KNOW.notes.length +
+  Object.keys(KNOW.files).length + Object.keys(KNOW.flows).length + (KNOW.overview ? 1 : 0);
+
+const CAT_COLORS = {
+  source: '#7aa2ff', component: '#4dd0e1', style: '#f48fb1', config: '#ffd180',
+  test: '#a5d6a7', docs: '#b0bec5', data: '#ce93d8', asset: '#ff8a65',
+  script: '#8dd3c7', other: '#90a4ae',
+};
+const FLOW_COLORS = { route: '#7aa2ff', api: '#8dd3c7', entry: '#ffd180', custom: '#ce93d8' };
+function catColor(c) {
+  if (CAT_COLORS[c]) return CAT_COLORS[c];
+  let hash = 0;
+  for (let i = 0; i < c.length; i++) hash = (hash * 31 + c.charCodeAt(i)) | 0;
+  return `hsl(${Math.abs(hash) % 360} 65% 70%)`;
+}
+function flowColor(k) { return FLOW_COLORS[k] || '#b0a6e8'; }
+
+const categories = [...new Set(nodes.map(n => n.category))].sort();
+const catCounts = new Map();
+for (const n of nodes) catCounts.set(n.category, (catCounts.get(n.category) || 0) + 1);
+
+const outAdj = new Map(), inAdj = new Map();
+for (const e of edges) {
+  if (!outAdj.has(e.source)) outAdj.set(e.source, []);
+  outAdj.get(e.source).push({ id: e.target, kinds: e.kinds });
+  if (!inAdj.has(e.target)) inAdj.set(e.target, []);
+  inAdj.get(e.target).push({ id: e.source, kinds: e.kinds });
+}
+for (const n of nodes) {
+  n.outDeg = (outAdj.get(n.id) || []).length;
+  n.inDeg = (inAdj.get(n.id) || []).length;
+  n.degree = n.outDeg + n.inDeg;
+}
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function humanSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+/* ============ tabs ============ */
+const tabsNav = document.getElementById('tabs-nav');
+function switchTab(name) {
+  for (const btn of tabsNav.querySelectorAll('button')) btn.classList.toggle('active', btn.dataset.tab === name);
+  for (const sec of document.querySelectorAll('.tab')) sec.classList.toggle('active', sec.id === 'tab-' + name);
+}
+tabsNav.addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-tab]');
+  if (btn) switchTab(btn.dataset.tab);
+});
+
+document.getElementById('header-stats').innerHTML =
+  `<span><b>${nodes.length}</b> files</span>` +
+  `<span><b>${edges.length}</b> connections</span>` +
+  `<span><b>${flows.length}</b> flows</span>`;
+
+/* ============ drawer ============ */
+const drawer = document.getElementById('drawer');
+const drawerScroll = document.getElementById('drawer-scroll');
+
+function fileRow(id, kindText) {
+  const n = nodesById.get(id);
+  if (!n) return '';
+  return `<div class="conn-item" data-openfile="${esc(id)}">` +
+    `<span class="dot" style="background:${catColor(n.category)}"></span>` +
+    `<span class="f-path">${esc(n.label)} <small>${esc(n.dir)}</small></span>` +
+    `<span class="kind">${esc(kindText || n.category)}</span></div>`;
+}
+
+function connectionsHtml(id) {
+  const out = outAdj.get(id) || [];
+  const inc = inAdj.get(id) || [];
+  if (!out.length && !inc.length) return '<div class="empty-note">No connections to other project files.</div>';
+  const group = (items, label) => {
+    if (!items.length) return '';
+    const sorted = [...items].sort((a, b) => a.id.localeCompare(b.id));
+    return `<div class="drawer-section-title">${label} (${items.length})</div>` +
+      sorted.map(l => fileRow(l.id, l.kinds.join(', '))).join('');
+  };
+  return group(out, 'Imports / references') + group(inc, 'Used by');
+}
+
+function openFile(id, opts = {}) {
+  const n = nodesById.get(id);
+  if (!n) return;
+  let html = '<div class="drawer-body">';
+  html += `<div class="chips-wrap">` +
+    `<span class="chip cat" style="--c:${catColor(n.category)}">${esc(n.category)}</span>` +
+    `<span class="chip">${esc(n.lang)}</span></div>`;
+  html += `<h2>${esc(n.label)}</h2>`;
+  html += `<div class="drawer-path">${esc(n.id)}</div>`;
+  if (n.summary) html += `<p class="drawer-summary">${esc(n.summary)}</p>`;
+  if (KNOW.files[n.id]) html += `<div class="ai-note"><span class="ai-tag">AI note</span>${esc(KNOW.files[n.id])}</div>`;
+  html += `<div class="drawer-stats">` +
+    `<span><b>${humanSize(n.size)}</b></span>` +
+    (n.loc ? `<span><b>${n.loc}</b> lines</span>` : '') +
+    `<span><b>${n.outDeg}</b> out</span><span><b>${n.inDeg}</b> in</span>` +
+    (n.flows.length ? `<span><b>${n.flows.length}</b> flows</span>` : '') +
+    `</div>`;
+  html += `<div class="drawer-actions">` +
+    `<button class="ask-btn" data-askfile="${esc(n.id)}">Copy &amp; ask AI</button>` +
+    `<button class="ghost-btn" data-locate="${esc(n.id)}">Locate in graph</button></div>`;
+
+  if (n.flows.length) {
+    html += '<div class="drawer-section-title">Part of flows</div><div class="chips-wrap">';
+    for (const fid of n.flows) {
+      const f = flowsById.get(fid);
+      if (f) html += `<span class="chip flow" data-openflow="${esc(fid)}" style="color:${flowColor(f.kind)}">${esc(f.name)}</span>`;
+    }
+    html += '</div>';
+  }
+
+  html += connectionsHtml(n.id);
+
+  if (n.external.length) {
+    html += '<div class="drawer-section-title">External packages</div><div class="chips-wrap">';
+    for (const p of n.external) html += `<span class="chip pkg">${esc(p)}</span>`;
+    html += '</div>';
+  }
+  html += '</div>';
+
+  drawerScroll.innerHTML = html;
+  drawerScroll.scrollTop = 0;
+  drawer.classList.add('open');
+  if (!opts.skipGraphSelect) graphSelect(id, { center: false });
+}
+
+function closeDrawer() {
+  drawer.classList.remove('open');
+  graphSelect(null);
+}
+document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
+/* ============ copy & ask AI ============ */
+function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text).catch(() => copyTextFallback(text));
+  }
+  copyTextFallback(text);
+  return Promise.resolve();
+}
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (_e) {}
+  ta.remove();
+}
+function flashCopied(btn) {
+  const original = btn.textContent;
+  btn.textContent = 'Copied! Paste it in your AI chat';
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 2000);
+}
+const GRAPH_NOTE = 'An interactive project graph of this repo was generated by the project-graph skill ' +
+  '(see project-graph.html at the project root; it maps every file, its connections, and its flows).';
+const KNOWLEDGE_NOTE = 'This dashboard grows over time: a living knowledge file, project-graph.knowledge.json at the ' +
+  'project root, is merged into it on every regeneration (schema in the project-graph skill, references/knowledge.md). ' +
+  'After answering, please record what you learned as a small entry in that file (create it if missing, merge - never ' +
+  'wipe other keys) and re-run the project-graph generator so the dashboard reflects it.';
+
+function flowPrompt(f) {
+  const ids = f.members.map(m => m[0]);
+  const maxDepth = f.members.reduce((a, m) => Math.max(a, m[1]), 0);
+  const keyFiles = ids.slice(0, 8);
+  const k = KNOW.flows[f.id] || {};
+  const lines = [
+    `Please tell me more about the "${f.name}" flow in this project.`,
+    '',
+    `Flow type: ${f.kind}. Entry point${f.entries.length === 1 ? '' : 's'}:`,
+    ...f.entries.map(p => `- ${p}`),
+  ];
+  if (f.desc) lines.push('', `Description: ${f.desc}`);
+  if (k.insight) lines.push('', `What is already known (from project-graph.knowledge.json): ${k.insight}`);
+  lines.push(
+    '',
+    `It reaches ${ids.length} project file${ids.length === 1 ? '' : 's'} across ${maxDepth + 1} import layer${maxDepth ? 's' : ''}` +
+      (keyFiles.length > 1 ? `, including: ${keyFiles.join(', ')}.` : '.'),
+    '',
+    GRAPH_NOTE,
+    'Starting from the entry points above, walk me through how this flow works end to end - what each step does and how the files connect.',
+    '',
+    KNOWLEDGE_NOTE,
+    `For this flow, store a 2-4 sentence summary under flows["${f.name}"].insight` +
+      (k.diagram
+        ? ', and if runtime behavior changed, also refresh flows["' + f.name + '"].diagram.'
+        : ', and if you traced the runtime steps, also author flows["' + f.name + '"].diagram (steps + edges) so the dashboard can render a flow diagram.')
+  );
+  return lines.join('\n');
+}
+
+function flowDiagramSchemaNote(flowName) {
+  return [
+    'Each step: { "id": "s1", "label": "<short action>", "kind": "start|action|decision|io|external|end", "file": "<optional source file>" }.',
+    'Each edge: { "from": "s1", "to": "s2", "label": "<optional, e.g. yes/no>" }. Use 5-15 steps; decisions should branch.',
+    `Store under flows["${flowName}"] in project-graph.knowledge.json (merge - never wipe other keys), then re-run the project-graph generator.`
+  ].join('\n');
+}
+
+function flowDiagramPrompt(f) {
+  const ids = f.members.map(m => m[0]);
+  const k = KNOW.flows[f.id] || {};
+  const lines = [
+    `Please create a flow diagram for the "${f.name}" flow in this project.`,
+    '',
+    `Flow type: ${f.kind}. Entry point${f.entries.length === 1 ? '' : 's'}: ${f.entries.join(', ')}.`,
+    `Files reached (${ids.length}): ${ids.slice(0, 12).join(', ')}${ids.length > 12 ? ', ...' : ''}.`,
+  ];
+  if (f.desc) lines.push(`Description: ${f.desc}`);
+  if (k.insight) lines.push(`Known insight: ${k.insight}`);
+  lines.push(
+    '',
+    'Read only the entry point and the few files needed to trace what happens at runtime (keep it cheap - do not read the whole project).',
+    'Describe runtime behavior (what happens when this flow runs), not the import tree.',
+    '',
+    GRAPH_NOTE,
+    'Then write the diagram into project-graph.knowledge.json at the project root (create the file if missing; merge - never wipe other keys), under:',
+    `  flows["${f.name}"] = { "insight": "<2-4 sentences>", "diagram": { "steps": [...], "edges": [...] } }`,
+    flowDiagramSchemaNote(f.name)
+  );
+  return lines.join('\n');
+}
+
+function flowDiagramUpdatePrompt(f) {
+  const ids = f.members.map(m => m[0]);
+  const k = KNOW.flows[f.id] || {};
+  const lines = [
+    `Please verify and update the flow diagram for the "${f.name}" flow if the code has changed since it was authored.`,
+    '',
+    `Flow type: ${f.kind}. Entry point${f.entries.length === 1 ? '' : 's'}: ${f.entries.join(', ')}.`,
+    `Files reached (${ids.length}): ${ids.slice(0, 12).join(', ')}${ids.length > 12 ? ', ...' : ''}.`,
+  ];
+  if (f.desc) lines.push(`Description: ${f.desc}`);
+  if (k.insight) lines.push('', `Current insight: ${k.insight}`);
+  if (k.diagram) {
+    lines.push('', 'Current diagram (from project-graph.knowledge.json):');
+    lines.push(JSON.stringify(k.diagram, null, 2));
+  }
+  lines.push(
+    '',
+    'Re-read the entry point and only files tied to steps that may have changed (keep it cheap - do not read the whole project).',
+    'Compare runtime behavior against the current diagram above:',
+    '- If it still matches, say the diagram is still accurate (no knowledge-file change needed).',
+    '- If steps, branches, labels, or file references are wrong or missing, merge an updated insight and diagram into project-graph.knowledge.json, set "updated" to today, and re-run the project-graph generator.',
+    '',
+    GRAPH_NOTE,
+    flowDiagramSchemaNote(f.name)
+  );
+  return lines.join('\n');
+}
+
+function knowledgeBootstrapPrompt() {
+  const lines = [
+    'Please analyze this project and tell me: (1) which technologies, frameworks and languages it is built with, ' +
+      'and (2) which external services it talks to or exposes (APIs, databases, queues, third-party SaaS, etc).',
+    '',
+    'Be context-efficient: start from manifests (package.json, pyproject.toml, etc), config files, and the most ' +
+      'connected files - do not read the whole project.',
+    '',
+    GRAPH_NOTE,
+    'Then record your findings in project-graph.knowledge.json at the project root (create it if missing; merge - never wipe other keys):',
+    '  { "overview": "<2-4 sentence project summary>",',
+    '    "technologies": [ { "name": "...", "role": "<e.g. web framework>", "detail": "<optional sentence>" } ],',
+    '    "services": [ { "name": "...", "role": "<e.g. database, auth provider>", "detail": "<optional sentence>" } ] }',
+    'Finally re-run the project-graph generator (per the project-graph skill) so the Insights tab shows them.'
+  ];
+  return lines.join('\n');
+}
+
+function filePrompt(n) {
+  const out = (outAdj.get(n.id) || []).map(l => l.id).slice(0, 6);
+  const inc = (inAdj.get(n.id) || []).map(l => l.id).slice(0, 6);
+  const flowNames = n.flows.map(fid => (flowsById.get(fid) || {}).name).filter(Boolean).slice(0, 5);
+  const lines = [
+    `Please tell me more about the file "${n.id}" in this project.`,
+    '',
+    `It is a ${n.category} file (${n.lang}${n.loc ? `, ${n.loc} lines` : ''}). ` +
+      `It imports ${n.outDeg} project file${n.outDeg === 1 ? '' : 's'} and is used by ${n.inDeg}.`,
+  ];
+  if (n.summary) lines.push(`Its own summary says: "${n.summary}"`);
+  if (KNOW.files[n.id]) lines.push(`What is already known (from project-graph.knowledge.json): ${KNOW.files[n.id]}`);
+  if (out.length) lines.push(`It imports: ${out.join(', ')}.`);
+  if (inc.length) lines.push(`It is used by: ${inc.join(', ')}.`);
+  if (flowNames.length) lines.push(`It participates in these flows: ${flowNames.join(', ')}.`);
+  lines.push(
+    '',
+    GRAPH_NOTE,
+    'Explain what this file does, why it matters, and how it fits into the project.',
+    '',
+    KNOWLEDGE_NOTE,
+    `For this file, store a 1-3 sentence note under files["${n.id}"].`
+  );
+  return lines.join('\n');
+}
+
+document.addEventListener('click', (e) => {
+  const askFileEl = e.target.closest('[data-askfile]');
+  if (askFileEl) {
+    const n = nodesById.get(askFileEl.dataset.askfile);
+    if (n) { copyText(filePrompt(n)); flashCopied(askFileEl); }
+    return;
+  }
+  const askFlowEl = e.target.closest('[data-askflow]');
+  if (askFlowEl) {
+    const f = flowsById.get(askFlowEl.dataset.askflow);
+    if (f) { copyText(flowPrompt(f)); flashCopied(askFlowEl); }
+    return;
+  }
+  const askDiagramEl = e.target.closest('[data-askdiagram]');
+  if (askDiagramEl) {
+    const f = flowsById.get(askDiagramEl.dataset.askdiagram);
+    if (f) { copyText(flowDiagramPrompt(f)); flashCopied(askDiagramEl); }
+    return;
+  }
+  const updateDiagramEl = e.target.closest('[data-updatediagram]');
+  if (updateDiagramEl) {
+    const f = flowsById.get(updateDiagramEl.dataset.updatediagram);
+    if (f) { copyText(flowDiagramUpdatePrompt(f)); flashCopied(updateDiagramEl); }
+    return;
+  }
+  const askKnowEl = e.target.closest('[data-askknowledge]');
+  if (askKnowEl) {
+    copyText(knowledgeBootstrapPrompt());
+    flashCopied(askKnowEl);
+    return;
+  }
+  const diagToggleEl = e.target.closest('[data-togglediagram]');
+  if (diagToggleEl) {
+    toggleFlowDiagram(diagToggleEl.dataset.togglediagram, diagToggleEl);
+    return;
+  }
+  const fileEl = e.target.closest('[data-openfile]');
+  if (fileEl) { openFile(fileEl.dataset.openfile); return; }
+  const flowEl = e.target.closest('[data-openflow]');
+  if (flowEl) { selectFlow(flowEl.dataset.openflow); return; }
+  const locateEl = e.target.closest('[data-locate]');
+  if (locateEl) { locateInGraph(locateEl.dataset.locate); return; }
+  const focusEl = e.target.closest('[data-flowgraph]');
+  if (focusEl) { focusFlowInGraph(focusEl.dataset.flowgraph); return; }
+});
+
+/* ============ global search ============ */
+const searchInput = document.getElementById('global-search');
+const searchResults = document.getElementById('search-results');
+function runSearch(q) {
+  const query = q.trim().toLowerCase();
+  if (!query) { searchResults.classList.remove('open'); return; }
+  const scored = [];
+  for (const f of flows) {
+    const name = String(f.name).toLowerCase();
+    if (name.includes(query)) scored.push([name.startsWith(query) ? 0 : 1, 'flow', f]);
+  }
+  for (const n of nodes) {
+    const name = n.label.toLowerCase();
+    let score = -1;
+    if (name === query) score = 0;
+    else if (name.startsWith(query)) score = 1;
+    else if (name.includes(query)) score = 2;
+    else if (n.id.toLowerCase().includes(query)) score = 3;
+    else if (n.summary.toLowerCase().includes(query)) score = 5;
+    if (score >= 0) scored.push([score, 'file', n]);
+  }
+  scored.sort((a, b) => a[0] - b[0]);
+  const top = scored.slice(0, 14);
+  if (!top.length) { searchResults.classList.remove('open'); return; }
+  searchResults.innerHTML = top.map(([, type, item]) => {
+    if (type === 'flow') {
+      return `<div class="search-item" data-openflow="${esc(item.id)}">` +
+        `<span class="dot" style="background:${flowColor(item.kind)}"></span>` +
+        `<span>${esc(item.name)}</span><span class="cat-mini">flow</span></div>`;
+    }
+    return `<div class="search-item" data-openfile="${esc(item.id)}">` +
+      `<span class="dot" style="background:${catColor(item.category)}"></span>` +
+      `<span>${esc(item.label)}</span><span class="s-dir">${esc(item.dir)}</span>` +
+      `<span class="cat-mini">${esc(item.category)}</span></div>`;
+  }).join('');
+  searchResults.classList.add('open');
+}
+searchInput.addEventListener('input', () => runSearch(searchInput.value));
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const first = searchResults.querySelector('.search-item');
+    if (first) { first.click(); searchResults.classList.remove('open'); searchInput.blur(); }
+  }
+  if (e.key === 'Escape') searchResults.classList.remove('open');
+});
+searchResults.addEventListener('click', () => {
+  searchResults.classList.remove('open');
+  searchInput.value = '';
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.header-search')) searchResults.classList.remove('open');
+});
+
+/* ============ explorer ============ */
+const expSearch = document.getElementById('exp-search');
+const expSort = document.getElementById('exp-sort');
+const expGrid = document.getElementById('exp-grid');
+const expCount = document.getElementById('exp-count');
+const expCatPills = document.getElementById('exp-cat-pills');
+const expCats = new Set(categories);
+const EXP_LIMIT = 600;
+
+for (const c of categories) {
+  const b = document.createElement('button');
+  b.className = 'pill on';
+  b.style.setProperty('--c', catColor(c));
+  b.innerHTML = `<span class="dot" style="background:${catColor(c)};width:7px;height:7px"></span>${esc(c)} (${catCounts.get(c)})`;
+  b.addEventListener('click', () => {
+    if (expCats.has(c)) { expCats.delete(c); b.classList.remove('on'); }
+    else { expCats.add(c); b.classList.add('on'); }
+    renderExplorer();
+  });
+  expCatPills.appendChild(b);
+}
+
+function cardHtml(n) {
+  const flowChips = n.flows.slice(0, 3).map(fid => {
+    const f = flowsById.get(fid);
+    return f ? `<span class="chip flow" data-openflow="${esc(fid)}" style="color:${flowColor(f.kind)}">${esc(f.name)}</span>` : '';
+  }).join('');
+  return `<div class="card" data-openfile="${esc(n.id)}" style="--c:${catColor(n.category)}">` +
+    `<div class="chips"><span class="chip cat" style="--c:${catColor(n.category)}">${esc(n.category)}</span>` +
+    `<span class="chip">${esc(n.lang)}</span></div>` +
+    `<h4>${esc(n.label)}</h4>` +
+    `<div class="dirline">${esc(n.dir || '(root)')}</div>` +
+    (n.summary ? `<p>${esc(n.summary)}</p>` : '') +
+    (flowChips ? `<div class="chips">${flowChips}</div>` : '') +
+    `<div class="foot"><span>${n.degree} links</span>` +
+    (n.loc ? `<span>${n.loc} lines</span>` : '') +
+    `<span>${humanSize(n.size)}</span></div></div>`;
+}
+
+function renderExplorer() {
+  const q = expSearch.value.trim().toLowerCase();
+  let list = nodes.filter(n => expCats.has(n.category));
+  if (q) {
+    list = list.filter(n =>
+      n.id.toLowerCase().includes(q) ||
+      n.summary.toLowerCase().includes(q) ||
+      n.lang.toLowerCase().includes(q)
+    );
+  }
+  const sort = expSort.value;
+  if (sort === 'name') list.sort((a, b) => a.id.localeCompare(b.id));
+  else if (sort === 'connections') list.sort((a, b) => b.degree - a.degree);
+  else if (sort === 'loc') list.sort((a, b) => b.loc - a.loc);
+  else if (sort === 'size') list.sort((a, b) => b.size - a.size);
+  const shown = list.slice(0, EXP_LIMIT);
+  expCount.textContent = `${list.length} of ${nodes.length} files` + (list.length > EXP_LIMIT ? ` (showing ${EXP_LIMIT})` : '');
+  expGrid.innerHTML = shown.map(cardHtml).join('');
+}
+expSearch.addEventListener('input', renderExplorer);
+expSort.addEventListener('change', renderExplorer);
+renderExplorer();
+
+/* ============ flows ============ */
+const flowListEl = document.getElementById('flow-list');
+const flowSearchEl = document.getElementById('flow-search');
+const flowDetailEl = document.getElementById('flow-detail');
+let activeFlowId = null;
+
+function renderFlowList() {
+  const q = flowSearchEl.value.trim().toLowerCase();
+  if (!flows.length) {
+    flowListEl.innerHTML = '<div class="empty-note">No flows detected. Add a project-graph.flows.json to define custom flows.</div>';
+    return;
+  }
+  flowListEl.innerHTML = flows
+    .filter(f => !q || String(f.name).toLowerCase().includes(q))
+    .map(f =>
+      `<div class="list-row${f.id === activeFlowId ? ' sel' : ''}" data-flow="${esc(f.id)}">` +
+      `<span class="dot" style="background:${flowColor(f.kind)}"></span>` +
+      `<span class="name">${esc(f.name)}</span><span class="count">${f.members.length}</span></div>`
+    ).join('');
+}
+
+function selectFlow(fid) {
+  const f = flowsById.get(fid);
+  if (!f) return;
+  activeFlowId = fid;
+  switchTab('flows');
+  renderFlowList();
+  const byDepth = new Map();
+  for (const [id, depth] of f.members) {
+    if (!byDepth.has(depth)) byDepth.set(depth, []);
+    byDepth.get(depth).push(id);
+  }
+  const k = KNOW.flows[fid] || {};
+  let html = `<div class="chips-wrap" style="margin-bottom:8px">` +
+    `<span class="chip cat" style="--c:${flowColor(f.kind)}">${esc(f.kind)} flow</span>` +
+    (k.diagram ? `<span class="chip" style="color:#c7b3ff;border-color:rgba(192,143,255,0.4)">AI diagram</span>` : '') +
+    `</div>`;
+  html += `<h2>${esc(f.name)}</h2>`;
+  html += `<div class="sub">${f.members.length} file${f.members.length === 1 ? '' : 's'} reachable from ${f.entries.length} entry point${f.entries.length === 1 ? '' : 's'}</div>`;
+  if (f.desc) html += `<p class="desc">${esc(f.desc)}</p>`;
+  if (k.insight) html += `<div class="ai-note"><span class="ai-tag">AI insight</span>${esc(k.insight)}</div>`;
+  html += `<div class="drawer-actions" style="margin-bottom:16px">` +
+    `<button class="ask-btn" data-askflow="${esc(fid)}">Copy &amp; ask AI</button>` +
+    (k.diagram
+      ? `<button class="ghost-btn" data-togglediagram="${esc(fid)}">Flow diagram</button>` +
+        `<button class="ghost-btn" data-updatediagram="${esc(fid)}" title="Copies a prompt asking AI to verify and refresh this diagram">Update diagram</button>`
+      : `<button class="ghost-btn" data-askdiagram="${esc(fid)}" title="Copies a prompt asking AI to author this flow's diagram">Ask AI for flow diagram</button>`) +
+    `<button class="ghost-btn" data-flowgraph="${esc(fid)}">Highlight in graph</button></div>`;
+  if (k.diagram) html += `<div class="flow-diagram-wrap" id="flow-diagram-host" style="display:none"></div>`;
+  const depths = [...byDepth.keys()].sort((a, b) => a - b);
+  for (const d of depths) {
+    const label = d === 0 ? `Entry point${byDepth.get(0).length === 1 ? '' : 's'}` : `Step ${d} - imported by the layer above`;
+    html += `<div class="depth-group"><div class="depth-head">${esc(label)} (${byDepth.get(d).length})</div>`;
+    html += byDepth.get(d).map(id => fileRow(id)).join('');
+    html += '</div>';
+  }
+  flowDetailEl.innerHTML = html;
+  flowDetailEl.scrollTop = 0;
+  const row = flowListEl.querySelector('.list-row.sel');
+  if (row && row.scrollIntoView) row.scrollIntoView({ block: 'nearest' });
+}
+/* ---- AI-authored flow diagram (layered SVG, no external libs) ---- */
+const FD_KIND_COLORS = {
+  start: '#a5d6a7', end: '#ef9a9a', action: '#7aa2ff',
+  decision: '#ffd180', io: '#ce93d8', external: '#90a4ae',
+};
+
+function fdLayout(diagram) {
+  const steps = diagram.steps, edges = diagram.edges;
+  const byId = new Map(steps.map(s => [s.id, s]));
+  const out = new Map(), indeg = new Map();
+  for (const s of steps) { out.set(s.id, []); indeg.set(s.id, 0); }
+  for (const e of edges) {
+    out.get(e.from).push(e.to);
+    indeg.set(e.to, indeg.get(e.to) + 1);
+  }
+  // longest-path layering (Kahn); cycle leftovers appended below
+  const layer = new Map();
+  const queue = steps.filter(s => indeg.get(s.id) === 0).map(s => s.id);
+  for (const id of queue) layer.set(id, 0);
+  const indegLeft = new Map(indeg);
+  while (queue.length) {
+    const id = queue.shift();
+    for (const next of out.get(id)) {
+      layer.set(next, Math.max(layer.get(next) || 0, layer.get(id) + 1));
+      indegLeft.set(next, indegLeft.get(next) - 1);
+      if (indegLeft.get(next) === 0) queue.push(next);
+    }
+  }
+  let maxLayer = Math.max(0, ...layer.values());
+  for (const s of steps) {
+    if (!layer.has(s.id)) layer.set(s.id, ++maxLayer);
+  }
+  const rows = new Map();
+  for (const s of steps) {
+    const l = layer.get(s.id);
+    if (!rows.has(l)) rows.set(l, []);
+    rows.get(l).push(s);
+  }
+  const GAP_X = 36, ROW_H = 118, PAD = 36;
+  let maxRowW = 0;
+  for (const row of rows.values()) {
+    for (const s of row) {
+      s.w = Math.max(120, Math.min(240, s.label.length * 7 + 36));
+      s.h = s.kind === 'decision' ? 62 : (s.file ? 56 : 44);
+    }
+    const rowW = row.reduce((a, s) => a + s.w, 0) + GAP_X * (row.length - 1);
+    maxRowW = Math.max(maxRowW, rowW);
+  }
+  const width = maxRowW + PAD * 2;
+  const layersSorted = [...rows.keys()].sort((a, b) => a - b);
+  layersSorted.forEach((l, i) => {
+    const row = rows.get(l);
+    const rowW = row.reduce((a, s) => a + s.w, 0) + GAP_X * (row.length - 1);
+    let x = (width - rowW) / 2;
+    for (const s of row) {
+      s.x = x + s.w / 2; s.y = PAD + i * ROW_H + s.h / 2;
+      x += s.w + GAP_X;
+    }
+  });
+  const height = PAD * 2 + layersSorted.length * ROW_H - (ROW_H - 70);
+  return { byId, width, height };
+}
+
+function fdLabelSvg(s) {
+  const color = FD_KIND_COLORS[s.kind] || FD_KIND_COLORS.action;
+  const words = s.label.split(' ');
+  let lines = [s.label];
+  if (s.label.length > 26 && words.length > 1) {
+    let best = 0, bestDiff = Infinity;
+    for (let i = 1; i < words.length; i++) {
+      const a = words.slice(0, i).join(' ').length;
+      const diff = Math.abs(a - (s.label.length - a));
+      if (diff < bestDiff) { bestDiff = diff; best = i; }
+    }
+    lines = [words.slice(0, best).join(' '), words.slice(best).join(' ')];
+  }
+  const fileLine = s.file ? `<tspan x="${s.x}" dy="13" class="fd-file">${esc(s.file.split('/').pop())}</tspan>` : '';
+  const y0 = s.y - (lines.length - 1) * 6.5 - (s.file ? 6 : 0);
+  return `<text class="fd-label" x="${s.x}" y="${y0 + 4}" text-anchor="middle" fill="${color}">` +
+    lines.map((ln, i) => `<tspan x="${s.x}" dy="${i === 0 ? 0 : 13}">${esc(ln)}</tspan>`).join('') +
+    fileLine + `</text>`;
+}
+
+function fdShapeSvg(s) {
+  const color = FD_KIND_COLORS[s.kind] || FD_KIND_COLORS.action;
+  const common = `fill="rgba(18,20,28,0.92)" stroke="${color}" stroke-width="1.4"` +
+    (s.kind === 'external' ? ' stroke-dasharray="5 4"' : '');
+  const x = s.x - s.w / 2, y = s.y - s.h / 2;
+  if (s.kind === 'decision') {
+    const pts = `${s.x},${y} ${x + s.w},${s.y} ${s.x},${y + s.h} ${x},${s.y}`;
+    return `<polygon points="${pts}" ${common} />`;
+  }
+  if (s.kind === 'io') {
+    const skew = 12;
+    const pts = `${x + skew},${y} ${x + s.w},${y} ${x + s.w - skew},${y + s.h} ${x},${y + s.h}`;
+    return `<polygon points="${pts}" ${common} />`;
+  }
+  const rx = (s.kind === 'start' || s.kind === 'end') ? s.h / 2 : 10;
+  return `<rect x="${x}" y="${y}" width="${s.w}" height="${s.h}" rx="${rx}" ${common} />`;
+}
+
+function renderFlowDiagram(diagram) {
+  const { byId, width, height } = fdLayout(diagram);
+  let svgBody = `<defs><marker id="fd-arrow" viewBox="0 0 10 10" refX="9" refY="5" ` +
+    `markerWidth="7" markerHeight="7" orient="auto-start-reverse">` +
+    `<path d="M 0 1 L 9 5 L 0 9 z" fill="#8fa9ff" /></marker></defs>`;
+  for (const e of diagram.edges) {
+    const a = byId.get(e.from), b = byId.get(e.to);
+    if (!a || !b) continue;
+    const down = b.y >= a.y;
+    const x1 = a.x, y1 = down ? a.y + a.h / 2 : a.y - a.h / 2;
+    const x2 = b.x, y2 = down ? b.y - b.h / 2 - 3 : b.y + b.h / 2 + 3;
+    const my = (y1 + y2) / 2;
+    const bend = down ? 0 : 60 + Math.abs(x1 - x2) * 0.1;
+    const d = down
+      ? `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`
+      : `M ${x1} ${y1} C ${x1 - bend} ${y1 - 30}, ${x2 - bend} ${y2 + 30}, ${x2} ${y2}`;
+    svgBody += `<path d="${d}" fill="none" stroke="#56608a" stroke-width="1.3" marker-end="url(#fd-arrow)" />`;
+    if (e.label) {
+      svgBody += `<text class="fd-edge-label" x="${(x1 + x2) / 2 + (down ? 6 : -bend)}" y="${my - 4}" text-anchor="middle">${esc(e.label)}</text>`;
+    }
+  }
+  for (const s of diagram.steps) {
+    const n = s.file && nodesById.has(s.file) ? ` data-openfile="${esc(s.file)}" style="cursor:pointer"` : '';
+    svgBody += `<g${n}>` + fdShapeSvg(s) + fdLabelSvg(s) + `</g>`;
+  }
+  return `<svg viewBox="0 0 ${width} ${height}" width="${Math.min(width, 880)}" ` +
+    `style="min-width:${Math.min(width, 520)}px" xmlns="http://www.w3.org/2000/svg">${svgBody}</svg>`;
+}
+
+function toggleFlowDiagram(fid, btn) {
+  const host = document.getElementById('flow-diagram-host');
+  const k = KNOW.flows[fid];
+  if (!host || !k || !k.diagram) return;
+  const open = host.style.display !== 'none';
+  if (open) {
+    host.style.display = 'none';
+    if (btn) btn.textContent = 'Flow diagram';
+  } else {
+    if (!host.innerHTML) host.innerHTML = renderFlowDiagram(k.diagram);
+    host.style.display = '';
+    if (btn) btn.textContent = 'Hide diagram';
+  }
+}
+
+flowSearchEl.addEventListener('input', renderFlowList);
+flowListEl.addEventListener('click', (e) => {
+  const row = e.target.closest('[data-flow]');
+  if (row) selectFlow(row.dataset.flow);
+});
+renderFlowList();
+
+/* ============ folders ============ */
+const treeRootEl = document.getElementById('tree-root');
+const collapsedDirs = new Set();
+
+const dirTree = { name: '', dirs: new Map(), files: [] };
+for (const n of nodes) {
+  const parts = n.id.split('/');
+  let cur = dirTree;
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (!cur.dirs.has(parts[i])) cur.dirs.set(parts[i], { name: parts[i], dirs: new Map(), files: [] });
+    cur = cur.dirs.get(parts[i]);
+  }
+  cur.files.push(n.id);
+}
+(function countTree(node) {
+  let count = node.files.length;
+  let size = 0;
+  for (const id of node.files) size += nodesById.get(id).size;
+  for (const child of node.dirs.values()) {
+    const [c, s] = countTree(child);
+    count += c; size += s;
+  }
+  node.total = count; node.totalSize = size;
+  return [count, size];
+})(dirTree);
+(function collapseDeep(node, path, depth) {
+  for (const [name, child] of node.dirs) {
+    const p = path ? path + '/' + name : name;
+    if (depth >= 1) collapsedDirs.add(p);
+    collapseDeep(child, p, depth + 1);
+  }
+})(dirTree, '', 0);
+
+function renderTree() {
+  treeRootEl.innerHTML = '';
+  function renderDir(node, path, ul) {
+    const sortedDirs = [...node.dirs.keys()].sort();
+    for (const dname of sortedDirs) {
+      const child = node.dirs.get(dname);
+      const p = path ? path + '/' + dname : dname;
+      const li = document.createElement('li');
+      ul.appendChild(li);
+      const row = document.createElement('div');
+      row.className = 'tree-row dir-row';
+      const collapsed = collapsedDirs.has(p);
+      row.innerHTML = `<button class="tree-toggle">${collapsed ? '+' : '\u2212'}</button>` +
+        `<b>${esc(dname)}/</b>` +
+        `<span class="tree-meta">${child.total} files \u00b7 ${humanSize(child.totalSize)}</span>`;
+      row.addEventListener('click', () => {
+        if (collapsedDirs.has(p)) collapsedDirs.delete(p); else collapsedDirs.add(p);
+        renderTree();
+      });
+      li.appendChild(row);
+      if (!collapsed) {
+        const nested = document.createElement('ul');
+        nested.className = 'tree-children';
+        li.appendChild(nested);
+        renderDir(child, p, nested);
+      }
+    }
+    for (const id of [...node.files].sort()) {
+      const n = nodesById.get(id);
+      const li = document.createElement('li');
+      ul.appendChild(li);
+      const row = document.createElement('div');
+      row.className = 'tree-row';
+      row.innerHTML = `<button class="tree-toggle spacer" disabled></button>` +
+        `<span class="dot" style="background:${catColor(n.category)}"></span>` +
+        `<span>${esc(n.label)}</span>` +
+        `<span class="tree-meta">${n.degree ? n.degree + ' links \u00b7 ' : ''}${humanSize(n.size)}</span>`;
+      row.addEventListener('click', () => openFile(id));
+      li.appendChild(row);
+    }
+  }
+  renderDir(dirTree, '', treeRootEl);
+}
+document.getElementById('tree-expand').addEventListener('click', () => { collapsedDirs.clear(); renderTree(); });
+document.getElementById('tree-collapse').addEventListener('click', () => {
+  collapsedDirs.clear();
+  (function walk(node, path) {
+    for (const [name, child] of node.dirs) {
+      const p = path ? path + '/' + name : name;
+      collapsedDirs.add(p);
+      walk(child, p);
+    }
+  })(dirTree, '');
+  renderTree();
+});
+renderTree();
+
+/* ============ graph (static layout, no physics) ============ */
+const svg = document.getElementById('graph');
+const graphRoot = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+const edgeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+const hotEdgeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+const labelGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+const clusterGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+graphRoot.append(edgeGroup, hotEdgeGroup, clusterGroup, nodeGroup, labelGroup);
+svg.appendChild(graphRoot);
+
+const tooltip = document.getElementById('tooltip');
+const hud = document.getElementById('graph-hud');
+const selectedCats = new Set(categories);
+let showLabels = nodes.length <= 250;
+let showEdges = true;
+let selectedId = null;
+let flowFocusId = null;
+let GW = 2400, GH = 1700;
+let view = { scale: 1, x: 0, y: 0 };
+
+// cluster nodes by top-level folder, place clusters greedily, phyllotaxis inside
+(function layout() {
+  const clusters = new Map();
+  for (const n of nodes) {
+    const top = n.id.includes('/') ? n.id.split('/')[0] : '(root)';
+    if (!clusters.has(top)) clusters.set(top, []);
+    clusters.get(top).push(n);
+  }
+  const list = [...clusters.entries()]
+    .map(([name, members]) => ({ name, members, r: 30 * Math.sqrt(members.length) + 60 }))
+    .sort((a, b) => b.members.length - a.members.length);
+
+  const placed = [];
+  for (const c of list) {
+    if (!placed.length) { c.cx = 0; c.cy = 0; placed.push(c); continue; }
+    let best = null;
+    for (let R = c.r + placed[0].r + 40; !best; R += 60) {
+      for (let a = 0; a < 36; a++) {
+        const theta = (a / 36) * Math.PI * 2 + R * 0.01;
+        const x = Math.cos(theta) * R, y = Math.sin(theta) * R * 0.78;
+        let ok = true;
+        for (const p of placed) {
+          if (Math.hypot(x - p.cx, y - p.cy) < c.r + p.r + 26) { ok = false; break; }
+        }
+        if (ok) { best = { x, y }; break; }
+      }
+      if (R > 60000) { best = { x: R, y: 0 }; }
+    }
+    c.cx = best.x; c.cy = best.y;
+    placed.push(c);
+  }
+
+  for (const c of placed) {
+    const members = [...c.members].sort((a, b) => b.degree - a.degree);
+    const usable = Math.max(30, c.r - 40);
+    const spread = members.length > 1 ? usable / Math.sqrt(members.length - 0.5) : 0;
+    members.forEach((n, j) => {
+      const rr = spread * Math.sqrt(j);
+      const th = j * 2.39996323;
+      n.x = c.cx + Math.cos(th) * rr;
+      n.y = c.cy + Math.sin(th) * rr;
+    });
+  }
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const n of nodes) {
+    minX = Math.min(minX, n.x); maxX = Math.max(maxX, n.x);
+    minY = Math.min(minY, n.y); maxY = Math.max(maxY, n.y);
+  }
+  if (!isFinite(minX)) { minX = 0; minY = 0; maxX = 100; maxY = 100; }
+  const pad = 150;
+  GW = (maxX - minX) + pad * 2;
+  GH = (maxY - minY) + pad * 2;
+  for (const n of nodes) { n.x = n.x - minX + pad; n.y = n.y - minY + pad; }
+  for (const c of placed) { c.cx = c.cx - minX + pad; c.cy = c.cy - minY + pad; }
+  svg.setAttribute('viewBox', `0 0 ${GW} ${GH}`);
+
+  for (const c of placed) {
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('class', 'gcluster');
+    t.setAttribute('x', c.cx);
+    t.setAttribute('y', c.cy - c.r + 26);
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = c.name;
+    clusterGroup.appendChild(t);
+  }
+})();
+
+const DRAW_ALL_EDGES = edges.length <= 4500;
+const edgeEls = [];
+if (DRAW_ALL_EDGES) {
+  for (const e of edges) {
+    const a = nodesById.get(e.source), b = nodesById.get(e.target);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('class', 'gedge');
+    line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+    line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+    edgeGroup.appendChild(line);
+    edgeEls.push([e, line]);
+  }
+}
+const nodeEls = nodes.map((n) => {
+  n.r = 4 + Math.min(7, Math.sqrt(n.degree) * 1.2);
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('class', 'gnode');
+  c.setAttribute('r', n.r);
+  c.setAttribute('cx', n.x); c.setAttribute('cy', n.y);
+  c.setAttribute('fill', catColor(n.category));
+  c.dataset.id = n.id;
+  nodeGroup.appendChild(c);
+  return [n, c];
+});
+const labelEls = nodes.map((n) => {
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('class', 'glabel');
+  t.setAttribute('x', n.x + n.r + 3); t.setAttribute('y', n.y + 3);
+  t.textContent = n.label;
+  labelGroup.appendChild(t);
+  return [n, t];
+});
+
+function graphVisibleSet() {
+  let vis = new Set(nodes.filter(n => selectedCats.has(n.category)).map(n => n.id));
+  if (flowFocusId) {
+    const f = flowsById.get(flowFocusId);
+    if (f) {
+      const memberSet = new Set(f.members.map(m => m[0]));
+      vis = new Set([...vis].filter(id => memberSet.has(id)));
+    }
+  }
+  return vis;
+}
+
+function drawHotEdges(vis) {
+  hotEdgeGroup.innerHTML = '';
+  let drawn = 0;
+  const addLine = (a, b) => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('class', 'gedge hot');
+    line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+    line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+    hotEdgeGroup.appendChild(line);
+    drawn++;
+  };
+  if (selectedId && vis.has(selectedId)) {
+    const a = nodesById.get(selectedId);
+    for (const l of (outAdj.get(selectedId) || [])) {
+      if (vis.has(l.id)) addLine(a, nodesById.get(l.id));
+    }
+    for (const l of (inAdj.get(selectedId) || [])) {
+      if (vis.has(l.id)) addLine(nodesById.get(l.id), a);
+    }
+  } else if (flowFocusId && !DRAW_ALL_EDGES) {
+    for (const e of edges) {
+      if (vis.has(e.source) && vis.has(e.target) && drawn < 3000) {
+        addLine(nodesById.get(e.source), nodesById.get(e.target));
+      }
+    }
+  }
+  return drawn;
+}
+
+function applyGraphFilters() {
+  const vis = graphVisibleSet();
+  const hood = selectedId ? new Set([selectedId,
+    ...(outAdj.get(selectedId) || []).map(l => l.id),
+    ...(inAdj.get(selectedId) || []).map(l => l.id)]) : null;
+  for (const [n, el] of nodeEls) {
+    const v = vis.has(n.id);
+    el.style.display = v ? '' : 'none';
+    el.classList.toggle('dim', v && hood ? !hood.has(n.id) : false);
+    el.classList.toggle('sel', n.id === selectedId);
+  }
+  for (const [n, el] of labelEls) {
+    const v = vis.has(n.id) && showLabels;
+    el.style.display = v ? '' : 'none';
+    el.classList.toggle('dim', v && hood ? !hood.has(n.id) : false);
+  }
+  let visEdges = 0;
+  for (const [e, el] of edgeEls) {
+    const v = showEdges && vis.has(e.source) && vis.has(e.target);
+    if (v) visEdges++;
+    el.style.display = v ? '' : 'none';
+    el.classList.toggle('dim', v && selectedId ? !(e.source === selectedId || e.target === selectedId) : false);
+  }
+  const hot = drawHotEdges(vis);
+  hud.textContent = `${vis.size} files \u00b7 ${DRAW_ALL_EDGES ? visEdges : hot} connections shown` +
+    (DRAW_ALL_EDGES ? '' : ' (large graph: connections shown on selection)');
+}
+
+function graphSelect(id, opts = {}) {
+  selectedId = id;
+  applyGraphFilters();
+  if (id && opts.center) centerOn(id);
+}
+
+function applyView() {
+  graphRoot.setAttribute('transform', `translate(${view.x} ${view.y}) scale(${view.scale})`);
+}
+function centerOn(id) {
+  const n = nodesById.get(id);
+  if (!n) return;
+  view.scale = Math.max(view.scale, 1.6);
+  view.x = GW / 2 - n.x * view.scale;
+  view.y = GH / 2 - n.y * view.scale;
+  applyView();
+}
+function locateInGraph(id) {
+  switchTab('graph');
+  graphSelect(id, { center: true });
+}
+function resetView() { view = { scale: 1, x: 0, y: 0 }; applyView(); }
+
+function focusFlowInGraph(fid) {
+  flowFocusId = fid;
+  flowFocusSelect.value = fid;
+  switchTab('graph');
+  selectedId = null;
+  applyGraphFilters();
+  resetView();
+}
+
+// pan/zoom/click
+let pan = null, downPos = null, downId = null, moved = false;
+svg.addEventListener('pointerdown', (evt) => {
+  if (evt.button !== 0 && evt.button !== 1) return;
+  downPos = { x: evt.clientX, y: evt.clientY };
+  moved = false;
+  downId = (evt.target.dataset && evt.target.dataset.id) || null;
+  pan = { x: evt.clientX, y: evt.clientY };
+  svg.classList.add('panning');
+  svg.setPointerCapture(evt.pointerId);
+});
+svg.addEventListener('pointermove', (evt) => {
+  if (downPos && Math.hypot(evt.clientX - downPos.x, evt.clientY - downPos.y) > 4) moved = true;
+  if (pan && moved) {
+    const rect = svg.getBoundingClientRect();
+    view.x += (evt.clientX - pan.x) * (GW / rect.width);
+    view.y += (evt.clientY - pan.y) * (GH / rect.height);
+    pan = { x: evt.clientX, y: evt.clientY };
+    applyView();
+  }
+  const id = evt.target.dataset && evt.target.dataset.id;
+  if (id && !moved) {
+    const n = nodesById.get(id);
+    tooltip.innerHTML = `<div class="t-name">${esc(n.id)}</div>` +
+      `<div class="t-sub">${esc(n.category)} \u00b7 ${esc(n.lang)} \u00b7 ${n.degree} links</div>` +
+      (n.summary ? `<div class="t-sub" style="margin-top:4px">${esc(n.summary.slice(0, 110))}${n.summary.length > 110 ? '...' : ''}</div>` : '');
+    tooltip.style.display = 'block';
+    tooltip.style.left = Math.min(window.innerWidth - 320, evt.clientX + 14) + 'px';
+    tooltip.style.top = (evt.clientY + 14) + 'px';
+  } else {
+    tooltip.style.display = 'none';
+  }
+});
+svg.addEventListener('pointerup', (evt) => {
+  if (!moved) {
+    if (downId) openFile(downId);
+    else closeDrawer();
+  }
+  pan = null; downPos = null; downId = null;
+  svg.classList.remove('panning');
+  try { svg.releasePointerCapture(evt.pointerId); } catch (_e) {}
+});
+svg.addEventListener('pointerleave', () => { tooltip.style.display = 'none'; });
+svg.addEventListener('wheel', (evt) => {
+  evt.preventDefault();
+  const rect = svg.getBoundingClientRect();
+  const sx = GW / rect.width, sy = GH / rect.height;
+  const cx = (evt.clientX - rect.left) * sx, cy = (evt.clientY - rect.top) * sy;
+  const factor = evt.deltaY < 0 ? 1.12 : 0.89;
+  const next = Math.min(6, Math.max(0.2, view.scale * factor));
+  if (next === view.scale) return;
+  const wx = (cx - view.x) / view.scale, wy = (cy - view.y) / view.scale;
+  view.scale = next;
+  view.x = cx - wx * next;
+  view.y = cy - wy * next;
+  applyView();
+}, { passive: false });
+
+// rail controls
+const catFiltersEl = document.getElementById('cat-filters');
+for (const c of categories) {
+  const row = document.createElement('label');
+  row.className = 'cat-row';
+  row.innerHTML = `<input type="checkbox" checked value="${esc(c)}" />` +
+    `<span class="dot" style="background:${catColor(c)}"></span>` +
+    `<span>${esc(c)}</span><span class="count">${catCounts.get(c)}</span>`;
+  row.querySelector('input').addEventListener('change', (e) => {
+    if (e.target.checked) selectedCats.add(c); else selectedCats.delete(c);
+    applyGraphFilters();
+  });
+  catFiltersEl.appendChild(row);
+}
+document.getElementById('cats-all').addEventListener('click', () => {
+  selectedCats.clear(); categories.forEach(c => selectedCats.add(c));
+  catFiltersEl.querySelectorAll('input').forEach(i => { i.checked = true; });
+  applyGraphFilters();
+});
+document.getElementById('cats-none').addEventListener('click', () => {
+  selectedCats.clear();
+  catFiltersEl.querySelectorAll('input').forEach(i => { i.checked = false; });
+  applyGraphFilters();
+});
+const flowFocusSelect = document.getElementById('flow-focus');
+for (const f of flows) {
+  const opt = document.createElement('option');
+  opt.value = f.id;
+  opt.textContent = `${f.name} (${f.members.length})`;
+  flowFocusSelect.appendChild(opt);
+}
+flowFocusSelect.addEventListener('change', () => {
+  flowFocusId = flowFocusSelect.value || null;
+  selectedId = null;
+  applyGraphFilters();
+  resetView();
+});
+const labelsToggle = document.getElementById('labels-toggle');
+labelsToggle.checked = showLabels;
+labelsToggle.addEventListener('change', (e) => { showLabels = e.target.checked; applyGraphFilters(); });
+document.getElementById('edges-toggle').addEventListener('change', (e) => { showEdges = e.target.checked; applyGraphFilters(); });
+document.getElementById('reset-view').addEventListener('click', resetView);
+applyGraphFilters();
+
+/* ============ derived metrics (insights) ============ */
+const METRICS = (function () {
+  const isSrc = n => n.category === 'source' || n.category === 'component';
+  const srcFiles = nodes.filter(isSrc);
+  const testFiles = nodes.filter(n => n.category === 'test');
+  const testedIds = new Set();
+  for (const e of edges) {
+    const s = nodesById.get(e.source), t = nodesById.get(e.target);
+    if (s && t && s.category === 'test' && isSrc(t)) testedIds.add(t.id);
+  }
+  const untestedHubs = srcFiles.filter(n => !testedIds.has(n.id)).sort((a, b) => b.degree - a.degree);
+  const codeFiles = nodes.filter(n => ['source', 'component', 'script', 'test'].includes(n.category) && n.loc > 0);
+  const documented = codeFiles.filter(n => n.summary);
+  const flowMembers = new Set();
+  for (const f of flows) for (const m of f.members) flowMembers.add(m[0]);
+  const srcInFlows = srcFiles.filter(n => flowMembers.has(n.id));
+  const locByFolder = new Map();
+  for (const n of nodes) {
+    const top = n.id.includes('/') ? n.id.split('/')[0] : '(root)';
+    locByFolder.set(top, (locByFolder.get(top) || 0) + n.loc);
+  }
+  const folderRows = [...locByFolder.entries()].filter(r => r[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const hotspots = nodes.filter(n => n.loc > 0 && n.degree > 0)
+    .sort((a, b) => b.loc * (b.degree + 1) - a.loc * (a.degree + 1)).slice(0, 10);
+  const langs = new Map();
+  for (const n of nodes) langs.set(n.lang, (langs.get(n.lang) || 0) + 1);
+  const orphans = nodes.filter(n => n.degree === 0 && isSrc(n));
+  const totalLoc = nodes.reduce((a, n) => a + n.loc, 0);
+  const totalSize = nodes.reduce((a, n) => a + n.size, 0);
+  const avgDeg = srcFiles.length ? srcFiles.reduce((a, n) => a + n.degree, 0) / srcFiles.length : 0;
+  const topConnected = [...nodes].sort((a, b) => b.degree - a.degree).filter(n => n.degree > 0).slice(0, 12);
+  const largest = [...nodes].sort((a, b) => b.loc - a.loc).filter(n => n.loc > 0).slice(0, 12);
+  const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+  return {
+    srcFiles, testFiles, testedIds, untestedHubs, documented, codeFiles,
+    srcInFlows, folderRows, hotspots, langs, orphans,
+    totalLoc, totalSize, avgDeg, topConnected, largest,
+    testedPct: pct(testedIds.size, srcFiles.length),
+    docPct: pct(documented.length, codeFiles.length),
+    flowPct: pct(srcInFlows.length, srcFiles.length),
+  };
+})();
+
+function barsPanelRows(rows, colorFn, fmt) {
+  const max = Math.max(1, ...rows.map(r => r[1]));
+  return rows.map(([name, count]) =>
+    `<div class="bar-row"><span class="name">${esc(name)}</span>` +
+    `<span class="track"><span class="fill" style="width:${(count / max) * 100}%;background:${colorFn(name)}"></span></span>` +
+    `<span class="num">${fmt ? fmt(count) : count}</span></div>`
+  ).join('');
+}
+
+/* ============ insights ============ */
+(function renderInsights() {
+  const M = METRICS;
+  const statCards = document.getElementById('stat-cards');
+  const grid = document.getElementById('insight-grid');
+
+  statCards.innerHTML = [
+    [nodes.length, 'files'],
+    [edges.length, 'connections'],
+    [flows.length, 'flows'],
+    [M.langs.size, 'languages'],
+    [M.totalLoc.toLocaleString(), 'lines of code'],
+    [humanSize(M.totalSize), 'total size'],
+    [M.testedPct + '%', 'source tested'],
+    [M.docPct + '%', 'code documented'],
+  ].map(([v, l]) => `<div class="stat-card"><b>${v}</b><span>${l}</span></div>`).join('');
+
+  const catRows = categories.map(c => [c, catCounts.get(c)]).sort((a, b) => b[1] - a[1]);
+  const langRows = [...M.langs.entries()].sort((a, b) => b[1] - a[1]).slice(0, 14);
+
+  if (KNOW.overview) {
+    statCards.insertAdjacentHTML('beforebegin',
+      `<div class="ai-note" style="max-width:none;margin-bottom:14px"><span class="ai-tag">AI overview` +
+      (KNOW.updated ? ` \u00b7 updated ${esc(KNOW.updated)}` : '') + `</span>${esc(KNOW.overview)}</div>`);
+  }
+
+  const knowItem = (t) =>
+    `<div class="know-item"><b>${esc(t.name)}</b>` +
+    (t.role ? `<span class="k-role">${esc(t.role)}</span>` : '') +
+    (t.detail ? `<p>${esc(t.detail)}</p>` : '') + `</div>`;
+  const knowEmpty = (what) =>
+    `<div class="empty-note" style="margin-bottom:10px">Not analyzed yet. ${what} are uncovered by AI as you explore: ` +
+    `copy the prompt below into your AI chat and the answer gets baked into the next generation.</div>` +
+    `<button class="ask-btn" data-askknowledge>Copy &amp; ask AI to analyze</button>`;
+
+  let html = '';
+  html += `<div class="panel"><h3>Technologies <span class="ai-tag">AI</span></h3>` +
+    (KNOW.technologies.length ? KNOW.technologies.map(knowItem).join('') : knowEmpty('Technologies')) + '</div>';
+  html += `<div class="panel"><h3>Services <span class="ai-tag">AI</span></h3>` +
+    (KNOW.services.length ? KNOW.services.map(knowItem).join('') : knowEmpty('Services')) + '</div>';
+  if (KNOW.notes.length) {
+    html += `<div class="panel"><h3>Uncovered insights <span class="ai-tag">AI</span></h3>` +
+      KNOW.notes.map(n => `<div class="know-item"><b>${esc(n.topic)}</b><p>${esc(n.body)}</p></div>`).join('') + '</div>';
+  }
+  html += `<div class="panel"><h3>Files by category</h3>` + barsPanelRows(catRows, catColor) + '</div>';
+  html += `<div class="panel"><h3>Files by language</h3>` + barsPanelRows(langRows, () => 'rgba(143,169,255,0.8)') + '</div>';
+
+  html += `<div class="panel"><h3>Testing</h3>` +
+    barsPanelRows([['source tested', M.testedPct], ['code documented', M.docPct], ['source in flows', M.flowPct]],
+      () => 'rgba(165,214,167,0.85)', v => v + '%') +
+    `<div class="empty-note" style="margin:8px 0 10px">` +
+    `${M.testedIds.size} of ${M.srcFiles.length} source files are imported directly by at least one of the ${M.testFiles.length} test files.</div>` +
+    (M.untestedHubs.length && M.untestedHubs[0].degree > 0
+      ? `<h3 style="margin-top:14px">Most connected without direct tests</h3>` +
+        M.untestedHubs.slice(0, 8).filter(n => n.degree > 0).map(n =>
+          `<div class="rank-item" data-openfile="${esc(n.id)}">` +
+          `<span class="dot" style="background:${catColor(n.category)}"></span>` +
+          `<span class="r-name">${esc(n.id)}</span><span class="num">${n.degree} links</span></div>`
+        ).join('')
+      : '') + '</div>';
+
+  html += `<div class="panel"><h3>Lines of code by folder</h3>` +
+    barsPanelRows(M.folderRows, () => 'rgba(143,169,255,0.8)', v => v.toLocaleString()) + '</div>';
+
+  html += `<div class="panel"><h3>Most connected files</h3>` +
+    (M.topConnected.length ? M.topConnected.map(n =>
+      `<div class="rank-item" data-openfile="${esc(n.id)}">` +
+      `<span class="dot" style="background:${catColor(n.category)}"></span>` +
+      `<span class="r-name">${esc(n.id)}</span><span class="num">${n.degree} links</span></div>`
+    ).join('') : '<div class="empty-note">No connections found.</div>') + '</div>';
+
+  html += `<div class="panel"><h3>Largest files (lines)</h3>` +
+    M.largest.map(n =>
+      `<div class="rank-item" data-openfile="${esc(n.id)}">` +
+      `<span class="dot" style="background:${catColor(n.category)}"></span>` +
+      `<span class="r-name">${esc(n.id)}</span><span class="num">${n.loc}</span></div>`
+    ).join('') + '</div>';
+
+  html += `<div class="panel"><h3>Risk hotspots (large &amp; highly connected)</h3>` +
+    (M.hotspots.length ? M.hotspots.map(n =>
+      `<div class="rank-item" data-openfile="${esc(n.id)}">` +
+      `<span class="dot" style="background:${catColor(n.category)}"></span>` +
+      `<span class="r-name">${esc(n.id)}</span><span class="num">${n.loc} lines \u00b7 ${n.degree} links</span></div>`
+    ).join('') : '<div class="empty-note">No hotspots detected.</div>') + '</div>';
+
+  html += `<div class="panel"><h3>Top flows</h3>` +
+    (flows.length ?
+      `<div class="empty-note" style="margin-bottom:8px">${M.flowPct}% of source files are reachable from at least one flow.</div>` +
+      flows.slice(0, 12).map(f =>
+        `<div class="rank-item" data-openflow="${esc(f.id)}">` +
+        `<span class="dot" style="background:${flowColor(f.kind)}"></span>` +
+        `<span class="r-name">${esc(f.name)}</span><span class="num">${f.members.length} files</span></div>`
+      ).join('') : '<div class="empty-note">No flows detected.</div>') + '</div>';
+
+  html += `<div class="panel"><h3>Unconnected source files (${M.orphans.length})</h3>` +
+    (M.orphans.length ? M.orphans.slice(0, 20).map(n =>
+      `<div class="rank-item" data-openfile="${esc(n.id)}">` +
+      `<span class="dot" style="background:${catColor(n.category)}"></span>` +
+      `<span class="r-name">${esc(n.id)}</span></div>`
+    ).join('') : '<div class="empty-note">Every source file is connected.</div>') + '</div>';
+
+  html += `<div class="panel"><h3>External packages</h3>` +
+    (DATA.external.length ? DATA.external.slice(0, 20).map(([pkg, count]) =>
+      `<div class="rank-item"><span class="dot" style="background:#90a4ae"></span>` +
+      `<span class="r-name">${esc(pkg)}</span><span class="num">${count} imports</span></div>`
+    ).join('') : '<div class="empty-note">No external imports detected.</div>') + '</div>';
+
+  html += `<div class="panel"><h3>About</h3>` +
+    `<div class="empty-note">Generated ${esc(DATA.generated)} by the project-graph skill.<br>` +
+    `Average connections per source file: ${M.avgDeg.toFixed(1)}.<br>` +
+    `Living knowledge: ${knowCount ? knowCount + ' AI-authored entr' + (knowCount === 1 ? 'y' : 'ies') + ' merged from project-graph.knowledge.json' : 'none yet'} ` +
+    `- it grows each time you use a "Copy &amp; ask AI" prompt and the agent records what it learned.<br>` +
+    `Regenerate with <code style="background:rgba(255,255,255,0.07);border-radius:5px;padding:1px 5px">python3 generate-graph.py</code></div></div>`;
+
+  grid.innerHTML = html;
+})();
+</script>
+</body>
+</html>
