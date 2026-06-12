@@ -11,13 +11,19 @@
 Every run ends with one line:
 
 ```text
-PROJECT_GRAPH_RESULT {"ok": true, "stage": "verified", "output": "...", "files": 369, "connections": 1007, "flows": 7, "external_packages": 31, "html_kb": 281, "knowledge": {"present": true, "technologies": 6, "services": 3, "flow_insights": 2, "flow_diagrams": 1, "file_notes": 4, "notes": 1}, "warning_count": 0, "warnings": []}
+PROJECT_GRAPH_RESULT {"ok": true, "stage": "verified", "generator_script": "/path/to/skill/scripts/generate-graph.py", "output": "...", "files": 369, "connections": 1007, "flows": 7, "external_packages": 31, "html_kb": 281, "knowledge": {"present": true, "file_on_disk": true, "total_entries": 12, "technologies": 6, "services": 3, "flow_insights": 2, "flow_diagrams": 1, "file_notes": 4, "notes": 1}, "warning_count": 0, "warnings": []}
 ```
 
 - **ok** — `true` only when generation and all self-checks passed.
+- **generator_script** — absolute path to `generate-graph.py` that ran; reuse for the next regeneration on this machine (see [portability.md](portability.md)).
 - **stage** — where the run ended: `verified`, `verification`, `generation`, or `arguments`.
 - **files / connections / flows** — headline counts to sanity-check against the project.
-- **knowledge** — entry counts merged from `project-graph.knowledge.json`; after writing a knowledge entry, confirm its count went up here.
+- **knowledge** — merge status from `project-graph.knowledge.json`:
+  - `file_on_disk` — whether the knowledge file exists at the project root.
+  - `present` — whether it parsed and merged successfully.
+  - `total_entries` — sum of overview + technologies + services + file notes + topic notes + documented flows; **must increase when you add a new entry** (or stay stable when you only corrected an existing one).
+  - Per-type counts: `technologies`, `services`, `flow_insights`, `flow_diagrams`, `file_notes`, `notes`.
+  After any knowledge change, confirm `present` true and the relevant count moved before telling the user the dashboard updated.
 - **warnings** — up to 8 per-file parse problems (the file became a bare node; the run still succeeded). Knowledge problems (unparseable file, flow keys matching no flow, notes on deleted files) also land here as soft warnings - fix the knowledge file keys rather than treating the run as failed.
 - **problems** — present only on verification failure (unreplaced placeholder, truncated HTML, zero files, size mismatch).
 
@@ -44,6 +50,8 @@ Work down this list; re-run and re-verify after each step.
 4. **Many parse warnings on one file type** — usually an exotic syntax; acceptable as-is (files still appear as nodes), mention it to the user.
 5. **Crash inside the script (exit 2, no obvious path)** — read only the function named in the error inside `scripts/generate-graph.py`, apply a minimal defensive fix (guard, try/except, regex tweak), and re-run. Keep the fix generic so the script stays project-agnostic.
 6. **Verification problems (exit 3)** — placeholder or truncation problems indicate a template edit went wrong; restore or fix the `TEMPLATE` string near the reported placeholder.
+7. **Knowledge file exists but merge failed (exit 3, `problems` mentions knowledge)** — open `project-graph.knowledge.json`, fix invalid JSON or wrong keys, regenerate. Check flow keys match dashboard names; file keys use exact project-relative paths.
+8. **Agent wrote knowledge but user sees no change** — almost always skipped step 5 (regenerate) or the browser tab was not reloaded. Re-run the generator, verify `total_entries`, tell the user to reload `project-graph.html`.
 
 ## Constraints
 

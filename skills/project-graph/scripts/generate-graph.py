@@ -27,6 +27,9 @@ from __future__ import annotations
 
 import sys
 
+# Avoid writing __pycache__ (embeds machine-local absolute paths in .pyc files).
+sys.dont_write_bytecode = True
+
 from project_graph.cli import main
 
 

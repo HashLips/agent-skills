@@ -2,7 +2,7 @@
 
 ## Summary
 
-- The output is a five-tab, dark-themed dashboard plus a detail drawer and global search.
+- The output is a six-tab, dark-themed dashboard plus a detail drawer and global search.
 - Files are nodes; import/include/link relationships are edges; flows group reachable files.
 - Everything is clickable: files open the drawer, flows open the flow view.
 - The layout is responsive; all tabs work in narrow windows.
@@ -10,10 +10,11 @@
 ## Tabs
 
 - **Explorer** — card grid of all files with category pills, text filter, and sorting (name, most connected, most lines, largest). The default landing view.
-- **Flows** — flow list on the left; selecting a flow shows its files grouped by step depth (entry point, then each import layer). If the knowledge file has an entry for the flow, an "AI insight" paragraph appears and a "Flow diagram" button renders the AI-authored runtime diagram (layered SVG; decision diamonds, labeled branches, steps clickable when tied to a file). When a diagram exists, "Update diagram" copies a prompt that includes the current diagram JSON and asks the agent to verify and refresh it if the code changed. Otherwise an "Ask AI for flow diagram" button copies a prompt instructing the agent to author the diagram into the knowledge file and regenerate. "Copy & ask AI" copies a ready-made prompt about the flow; "Highlight in graph" isolates the flow in the Graph tab.
+- **Flows** — flow list on the left; selecting a flow shows its files grouped by step depth (entry point, then each import layer). If the knowledge file has an entry for the flow, an "AI insight" paragraph appears and a "Flow diagram" button toggles the AI-authored runtime diagram (layered SVG; decision diamonds, labeled branches, steps clickable when tied to a file). One primary copy button: "Copy & explain" when the flow is undocumented (prompt asks for both insight and diagram); "Copy & update" when both already exist (prompt includes the stored insight and diagram JSON and asks the agent to verify and refresh only if stale). "Highlight in graph" isolates the flow in the Graph tab.
 - **Folders** — collapsible directory tree mirroring the repository, with file counts and cumulative sizes per folder.
 - **Graph** — static mind-map: files clustered by top-level folder with connection lines. Pan by dragging, zoom by scrolling, click a node for details. No physics simulation, so it stays fast on large projects. Rail filters: categories, flow focus, label and edge toggles.
-- **Insights** — stat cards (files, connections, flows, languages, lines, size, source tested %, code documented %) plus panels: AI-uncovered Technologies and Services (from the knowledge file; when empty they show a "Copy & ask AI to analyze" bootstrap prompt), AI topic notes, files by category and language, testing (test reach, documentation, flow coverage, most connected untested files), lines of code by folder, most connected files, largest files, risk hotspots (large and highly connected), top flows, unconnected source files, and external packages. An AI overview banner appears above the stat cards when the knowledge file has one.
+- **Insights** — stat cards (files, connections, flows, languages, lines, size, source tested %, code documented %) plus panels: a single **Project analysis** AI card with one "Copy & explain" (or "Copy & update" when already analyzed) that bootstraps overview, technologies, and services into the knowledge file; separate Technologies and Services panels appear below only after the agent records them. Also AI topic notes, files by category and language, testing (test reach, documentation, flow coverage, most connected untested files), lines of code by folder, most connected files, largest files, risk hotspots (large and highly connected), top flows, unconnected source files, external packages, and an **About** panel (generation date, knowledge entry count, regenerate command). An AI overview banner appears above the stat cards when the knowledge file has one.
+- **Config** — last tab; dashboard preferences saved in the browser: **Go to file** editor scheme (`vscode`, `cursor`, `vscodium`, `wsl`) and **project root** override for path resolution. Extensible home for future dashboard settings.
 
 ## File drawer
 
@@ -25,17 +26,17 @@ Clicking any file (in any tab) opens a drawer showing:
 - flows the file participates in (clickable chips),
 - "Imports / references" (outgoing) and "Used by" (incoming) file lists,
 - external packages the file imports,
-- "Copy & ask AI" and "Locate in graph" actions.
+- "Copy & explain" (or "Copy & update" when an AI note already exists), "Go to file" (opens the file in your IDE via `vscode://file/…`, `cursor://file/…`, etc.; scheme is auto-detected from the host IDE at generation time and in the browser when opened inside an IDE preview, with manual override in the **Config** tab), and "Locate in graph" actions.
 
-## Copy & ask AI
+## Copy prompts
 
-- Bright buttons on the flow detail view and the file drawer copy a short, self-contained prompt to the clipboard for pasting into an AI chat.
-- Flow prompts include the flow name, kind, description, entry points, reach (files and layers), key files, and any existing AI insight, then ask for an end-to-end walkthrough.
-- File prompts include the path, category, language, line count, direct imports, dependents, flows, and any existing AI note, then ask for an explanation of the file's role.
-- Diagram prompts (flow view) and the Insights bootstrap prompt carry the knowledge-file schema inline so the agent can author entries without reading the skill first.
-- "Update diagram" prompts include the stored diagram JSON and ask the agent to verify against current code; update only if stale.
+- Bright buttons on the flow detail view, file drawer, and Insights tab copy a short, self-contained prompt to the clipboard for pasting into an AI chat.
+- Label is **Copy & explain** when nothing is stored yet; **Copy & update** when the target already has knowledge (flow: insight + diagram; file: note; Insights: overview/technologies/services).
+- Flow prompts always ask for a 2-4 sentence insight and a runtime diagram (steps + edges). Update prompts include the stored insight and diagram JSON and ask the agent to verify against current code; change only if stale.
+- File prompts include the path, category, language, line count, direct imports, dependents, flows, and any existing AI note, then ask for an explanation or a verification pass.
+- Insights bootstrap prompts carry the knowledge-file schema inline so the agent can author entries without reading the skill first.
 - Every prompt mentions that `project-graph.html` exists and instructs the agent to record what it learned in `project-graph.knowledge.json` (merge, never wipe) and regenerate - this is how the dashboard grows with use.
-- Copying works from `file://` pages via a clipboard fallback; the button confirms with "Copied!".
+- Copying works from `file://` pages via a clipboard fallback; the button shows "Copied! Paste it in your AI chat" for five seconds before reverting.
 
 ## Node semantics
 

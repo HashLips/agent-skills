@@ -98,12 +98,14 @@
     display: inline-flex; align-items: center; gap: 6px;
   }
   .pill.on { border-color: color-mix(in srgb, var(--c, var(--accent)) 60%, transparent); color: var(--ink); background: color-mix(in srgb, var(--c, var(--accent)) 13%, transparent); }
+  #exp-cat-pills { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
   .result-count { color: var(--faint); font-size: 0.76rem; margin-left: auto; }
   .ghost-btn {
     border: 1px solid var(--line); background: var(--panel); color: var(--muted);
     border-radius: 9px; padding: 6px 11px; font-size: 0.76rem; cursor: pointer;
   }
   .ghost-btn:hover { color: var(--ink); border-color: rgba(143,169,255,0.45); }
+  .ghost-btn.on { color: var(--ink); border-color: rgba(143,169,255,0.55); background: rgba(143,169,255,0.12); }
   .ask-btn {
     border: none; border-radius: 9px; padding: 7px 14px; font-size: 0.78rem; cursor: pointer;
     background: linear-gradient(135deg, #8fa9ff, #c08fff); color: #0b0d16; font-weight: 700;
@@ -112,7 +114,6 @@
   }
   .ask-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
   .ask-btn:disabled { filter: saturate(0.4); cursor: default; transform: none; }
-
   .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 12px; }
   .card {
     background: var(--panel); border: 1px solid var(--line-soft); border-radius: var(--radius);
@@ -230,7 +231,23 @@
   #tooltip .t-name { font-weight: 600; margin-bottom: 2px; word-break: break-all; }
   #tooltip .t-sub { color: var(--muted); font-size: 0.72rem; }
 
-  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; align-items: start; }
+  .insight-grid, .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; align-items: start; }
+  .config-grid { padding: 16px; }
+  .config-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.5; margin: 0 0 12px; }
+  .config-field { margin-top: 10px; }
+  .config-field label { display: block; font-size: 0.72rem; color: var(--faint); margin-bottom: 5px; }
+  .config-field input[type="text"] {
+    width: 100%; padding: 7px 10px; background: rgba(255,255,255,0.06);
+    border: 1px solid var(--line); border-radius: 8px; color: var(--ink); font-size: 0.82rem;
+  }
+  .config-status {
+    margin-top: 8px; font-size: 0.78rem; color: var(--faint); word-break: break-all;
+  }
+  .config-status code {
+    background: rgba(255,255,255,0.07); border-radius: 5px; padding: 1px 5px; font-size: 0.76rem;
+  }
+  .editor-scheme-btn.on { border-color: rgba(143,169,255,0.5) !important; background: rgba(143,169,255,0.14) !important; color: var(--ink) !important; }
+  .config-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
   .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
   .stat-card { background: var(--panel); border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 13px 15px; }
   .stat-card b { display: block; font-size: 1.45rem; font-weight: 700; }
@@ -313,7 +330,7 @@
     #tab-graph.active { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
     .rail { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 18px; border-right: none; border-bottom: 1px solid var(--line-soft); max-height: 38vh; }
     .card-grid { grid-template-columns: 1fr; }
-    .insight-grid { grid-template-columns: 1fr; }
+    .insight-grid, .config-grid { grid-template-columns: 1fr; }
     .bar-row { grid-template-columns: 100px 1fr 36px; }
     .toolbar { position: static; }
   }
@@ -328,6 +345,7 @@
     <button data-tab="folders">Folders</button>
     <button data-tab="graph">Graph</button>
     <button data-tab="insights">Insights</button>
+    <button data-tab="config">Config</button>
   </nav>
   <div class="header-search">
     <input id="global-search" placeholder="Search files and flows..." autocomplete="off" />
@@ -413,6 +431,15 @@
       <div class="insight-grid" id="insight-grid"></div>
     </div>
   </section>
+
+  <section id="tab-config" class="tab">
+    <div class="scroll-tab">
+      <div class="toolbar">
+        <span class="result-count" style="margin-left:0">Dashboard preferences — saved in this browser</span>
+      </div>
+      <div class="config-grid" id="config-grid"></div>
+    </div>
+  </section>
 </div>
 
 <aside id="drawer">
@@ -434,6 +461,134 @@ const flowsById = new Map(flows.map(f => [f.id, f]));
 const KNOW = DATA.knowledge || { present: false, overview: '', technologies: [], services: [], flows: {}, files: {}, notes: [] };
 const knowCount = KNOW.technologies.length + KNOW.services.length + KNOW.notes.length +
   Object.keys(KNOW.files).length + Object.keys(KNOW.flows).length + (KNOW.overview ? 1 : 0);
+const PROJECT_ROOT_KEY = 'projectGraphProjectRoot';
+const EDITOR_SCHEMES = Array.isArray(DATA.editorSchemes) && DATA.editorSchemes.length
+  ? DATA.editorSchemes.map(String)
+  : ['vscode', 'cursor', 'vscodium'];
+const EDITOR_SCHEME_DEFAULT = String(DATA.editorScheme || EDITOR_SCHEMES[0] || 'vscode');
+const EDITOR_DETECTED_FROM = String(DATA.editorDetectedFrom || '');
+const EDITOR_SCHEME_KEY = 'projectGraphEditorScheme';
+
+function inferEditorFromHost() {
+  const blob = [navigator.userAgent, document.referrer, window.location.href].join(' ').toLowerCase();
+  if (/\bcursor\b/.test(blob) || blob.includes('cursor/')) return 'cursor';
+  if (blob.includes('vscodium')) return 'vscodium';
+  if (blob.includes('windsurf')) return 'windsurf';
+  if (blob.includes('vscode') || blob.includes('visual studio code')) return 'vscode';
+  return null;
+}
+
+function activeEditorScheme() {
+  try {
+    const saved = localStorage.getItem(EDITOR_SCHEME_KEY);
+    if (saved && EDITOR_SCHEMES.includes(saved)) return saved;
+  } catch (_e) {}
+  return inferEditorFromHost() || EDITOR_SCHEME_DEFAULT;
+}
+
+function editorSchemeSourceLabel() {
+  try {
+    if (localStorage.getItem(EDITOR_SCHEME_KEY)) return 'saved preference';
+  } catch (_e) {}
+  if (inferEditorFromHost()) return 'detected in browser';
+  if (EDITOR_DETECTED_FROM && EDITOR_DETECTED_FROM !== 'default') return 'detected at generation';
+  return 'default';
+}
+
+function setEditorScheme(scheme) {
+  if (!EDITOR_SCHEMES.includes(scheme)) return;
+  try { localStorage.setItem(EDITOR_SCHEME_KEY, scheme); } catch (_e) {}
+}
+
+/** Derive project root from where this HTML lives (works per machine, no baked-in paths). */
+function projectRootFromPage() {
+  try {
+    const pathname = decodeURIComponent(window.location.pathname);
+    let path = pathname;
+    if (/^\/[A-Za-z]:/.test(path)) path = path.slice(1);
+    if (window.location.protocol === 'file:') {
+      return path.replace(/[/\\][^/\\]*$/, '').replace(/\\/g, '/');
+    }
+    const host = (window.location.hostname || '').toLowerCase();
+    if (host.includes('vscode-resource') || host.includes('vscode-cdn')) {
+      return path.replace(/[/\\][^/\\]*$/, '').replace(/\\/g, '/');
+    }
+    return path.replace(/\/[^/]+$/, '') || '';
+  } catch (_e) {
+    return '';
+  }
+}
+
+function tryOpenUri(uri) {
+  const a = document.createElement('a');
+  a.href = uri;
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function savedProjectRoot() {
+  try {
+    const s = localStorage.getItem(PROJECT_ROOT_KEY);
+    if (s) return s.replace(/\\/g, '/').replace(/\/$/, '');
+  } catch (_e) {}
+  return '';
+}
+
+function setProjectRoot(path) {
+  try {
+    const normalized = String(path || '').replace(/\\/g, '/').replace(/\/$/, '').trim();
+    if (normalized) localStorage.setItem(PROJECT_ROOT_KEY, normalized);
+    else localStorage.removeItem(PROJECT_ROOT_KEY);
+  } catch (_e) {}
+}
+
+function effectiveProjectRoot() {
+  return savedProjectRoot() || projectRootFromPage();
+}
+
+function projectRootSourceLabel() {
+  if (savedProjectRoot()) return 'saved override';
+  if (projectRootFromPage()) return 'detected from page location';
+  return 'not detected';
+}
+
+function refreshConfigPanel() {
+  const editorStatus = document.getElementById('config-editor-status');
+  if (editorStatus) {
+    editorStatus.innerHTML = `Active: <code>${esc(activeEditorScheme())}://file/…</code> (${esc(editorSchemeSourceLabel())})`;
+  }
+  const rootDisplay = document.getElementById('project-root-display');
+  if (rootDisplay) {
+    rootDisplay.textContent = effectiveProjectRoot() || '(not detected — set below)';
+  }
+  const rootSource = document.getElementById('config-root-source');
+  if (rootSource) rootSource.textContent = projectRootSourceLabel();
+}
+
+function resolveAbsPath(relPath) {
+  const root = effectiveProjectRoot();
+  if (root) {
+    return (root.replace(/\/$/, '') + '/' + relPath).replace(/\/+/g, '/');
+  }
+  const base = window.location.href.replace(/[#?].*$/, '').replace(/[^/]+$/, '');
+  let abs = decodeURIComponent(new URL(relPath, base).pathname);
+  if (/^\/[A-Za-z]:/.test(abs)) abs = abs.slice(1);
+  return abs;
+}
+
+function editorUri(relPath, scheme) {
+  const abs = resolveAbsPath(relPath);
+  const normalized = abs.replace(/\\/g, '/');
+  const s = scheme || activeEditorScheme();
+  if (/^[A-Za-z]:\//.test(normalized)) return `${s}://file/${normalized}`;
+  return `${s}://file${normalized.startsWith('/') ? normalized : '/' + normalized}`;
+}
+
+function openInEditor(relPath) {
+  tryOpenUri(editorUri(relPath));
+}
 
 const CAT_COLORS = {
   source: '#7aa2ff', component: '#4dd0e1', style: '#f48fb1', config: '#ffd180',
@@ -535,8 +690,10 @@ function openFile(id, opts = {}) {
     `<span><b>${n.outDeg}</b> out</span><span><b>${n.inDeg}</b> in</span>` +
     (n.flows.length ? `<span><b>${n.flows.length}</b> flows</span>` : '') +
     `</div>`;
+  const fileHasNote = !!KNOW.files[n.id];
   html += `<div class="drawer-actions">` +
-    `<button class="ask-btn" data-askfile="${esc(n.id)}">Copy &amp; ask AI</button>` +
+    `<button class="ask-btn" data-askfile="${esc(n.id)}">${fileHasNote ? 'Copy &amp; update' : 'Copy &amp; explain'}</button>` +
+    `<button class="ghost-btn" data-openeditor="${esc(n.id)}">Go to file</button>` +
     `<button class="ghost-btn" data-locate="${esc(n.id)}">Locate in graph</button></div>`;
 
   if (n.flows.length) {
@@ -570,7 +727,7 @@ function closeDrawer() {
 document.getElementById('drawer-close').addEventListener('click', closeDrawer);
 window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
 
-/* ============ copy & ask AI ============ */
+/* ============ copy prompts ============ */
 function copyText(text) {
   if (navigator.clipboard && window.isSecureContext) {
     return navigator.clipboard.writeText(text).catch(() => copyTextFallback(text));
@@ -592,42 +749,76 @@ function flashCopied(btn) {
   const original = btn.textContent;
   btn.textContent = 'Copied! Paste it in your AI chat';
   btn.disabled = true;
-  setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 2000);
+  setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 5000);
 }
-const GRAPH_NOTE = 'An interactive project graph of this repo was generated by the project-graph skill ' +
+const GRAPH_NOTE = 'An interactive project graph of this project was generated by the project-graph skill ' +
   '(see project-graph.html at the project root; it maps every file, its connections, and its flows).';
-const KNOWLEDGE_NOTE = 'This dashboard grows over time: a living knowledge file, project-graph.knowledge.json at the ' +
-  'project root, is merged into it on every regeneration (schema in the project-graph skill, references/knowledge.md). ' +
-  'After answering, please record what you learned as a small entry in that file (create it if missing, merge - never ' +
-  'wipe other keys) and re-run the project-graph generator so the dashboard reflects it.';
+function knowledgeRegenerateSteps(entryHint) {
+  return [
+    '',
+    'MANDATORY — close the loop (do not mark the task done until all pass):',
+    '1. Merge into project-graph.knowledge.json at the project root (create if missing; never wipe other keys). Set "updated" to today.',
+    '2. Regenerate the dashboard immediately:',
+    '   python3 "<path-to-skill>/scripts/generate-graph.py" [project_root]',
+    '   Resolve the script: generator_script from PROJECT_GRAPH_RESULT, else the project-graph skill path in this session,',
+    '   else .cursor/skills/project-graph/scripts/ in the workspace, else ~/.cursor/skills/project-graph/scripts/.',
+    '3. Verify exit code 0 and PROJECT_GRAPH_RESULT: "ok": true, knowledge.present true, and the count for your entry increased' +
+      (entryHint ? ' (' + entryHint + ')' : '') + '.',
+    '4. Tell the user to reload project-graph.html in their browser — the open tab does not auto-refresh.',
+    'Writing the JSON alone does not update the dashboard; regeneration is required.'
+  ].join('\n');
+}
 
 function flowPrompt(f) {
   const ids = f.members.map(m => m[0]);
   const maxDepth = f.members.reduce((a, m) => Math.max(a, m[1]), 0);
   const keyFiles = ids.slice(0, 8);
   const k = KNOW.flows[f.id] || {};
+  const hasKnowledge = !!(k.insight && k.diagram);
   const lines = [
-    `Please tell me more about the "${f.name}" flow in this project.`,
+    hasKnowledge
+      ? `Please verify and update the "${f.name}" flow in this project if the code has changed since it was documented.`
+      : `Please tell me more about the "${f.name}" flow in this project.`,
     '',
     `Flow type: ${f.kind}. Entry point${f.entries.length === 1 ? '' : 's'}:`,
     ...f.entries.map(p => `- ${p}`),
   ];
   if (f.desc) lines.push('', `Description: ${f.desc}`);
-  if (k.insight) lines.push('', `What is already known (from project-graph.knowledge.json): ${k.insight}`);
   lines.push(
     '',
     `It reaches ${ids.length} project file${ids.length === 1 ? '' : 's'} across ${maxDepth + 1} import layer${maxDepth ? 's' : ''}` +
-      (keyFiles.length > 1 ? `, including: ${keyFiles.join(', ')}.` : '.'),
-    '',
-    GRAPH_NOTE,
-    'Starting from the entry points above, walk me through how this flow works end to end - what each step does and how the files connect.',
-    '',
-    KNOWLEDGE_NOTE,
-    `For this flow, store a 2-4 sentence summary under flows["${f.name}"].insight` +
-      (k.diagram
-        ? ', and if runtime behavior changed, also refresh flows["' + f.name + '"].diagram.'
-        : ', and if you traced the runtime steps, also author flows["' + f.name + '"].diagram (steps + edges) so the dashboard can render a flow diagram.')
+      (keyFiles.length > 1 ? `, including: ${keyFiles.join(', ')}.` : '.')
   );
+  if (hasKnowledge) {
+    lines.push(
+      '',
+      'Re-read the entry point and only files needed to verify runtime behavior (keep it cheap - do not read the whole project).',
+      'Compare against what is already stored in project-graph.knowledge.json:',
+      '',
+      `Current insight: ${k.insight}`,
+      '',
+      'Current diagram:',
+      JSON.stringify(k.diagram, null, 2),
+      '',
+      'If the insight and diagram still match the code, say they are still accurate (no knowledge-file change needed).',
+      'If the walkthrough, steps, branches, labels, or file references are wrong or missing, merge updated flows["' + f.name + '"].insight and flows["' + f.name + '"].diagram.',
+      knowledgeRegenerateSteps('flow_insights / flow_diagrams'),
+      '',
+      GRAPH_NOTE,
+      flowDiagramSchemaNote(f.name)
+    );
+  } else {
+    if (k.insight) lines.push('', `Partial note already on file (diagram missing): ${k.insight}`);
+    lines.push(
+      '',
+      GRAPH_NOTE,
+      'Starting from the entry points above, walk me through how this flow works end to end - what each step does and how the files connect.',
+      '',
+      `For this flow, store a 2-4 sentence summary under flows["${f.name}"].insight, and author flows["${f.name}"].diagram (steps + edges) so the dashboard can render a flow diagram.`,
+      flowDiagramSchemaNote(f.name),
+      knowledgeRegenerateSteps('flow_insights / flow_diagrams')
+    );
+  }
   return lines.join('\n');
 }
 
@@ -635,77 +826,52 @@ function flowDiagramSchemaNote(flowName) {
   return [
     'Each step: { "id": "s1", "label": "<short action>", "kind": "start|action|decision|io|external|end", "file": "<optional source file>" }.',
     'Each edge: { "from": "s1", "to": "s2", "label": "<optional, e.g. yes/no>" }. Use 5-15 steps; decisions should branch.',
-    `Store under flows["${flowName}"] in project-graph.knowledge.json (merge - never wipe other keys), then re-run the project-graph generator.`
+    `Store under flows["${flowName}"] in project-graph.knowledge.json (merge - never wipe other keys).`
   ].join('\n');
 }
 
-function flowDiagramPrompt(f) {
-  const ids = f.members.map(m => m[0]);
-  const k = KNOW.flows[f.id] || {};
-  const lines = [
-    `Please create a flow diagram for the "${f.name}" flow in this project.`,
-    '',
-    `Flow type: ${f.kind}. Entry point${f.entries.length === 1 ? '' : 's'}: ${f.entries.join(', ')}.`,
-    `Files reached (${ids.length}): ${ids.slice(0, 12).join(', ')}${ids.length > 12 ? ', ...' : ''}.`,
-  ];
-  if (f.desc) lines.push(`Description: ${f.desc}`);
-  if (k.insight) lines.push(`Known insight: ${k.insight}`);
-  lines.push(
-    '',
-    'Read only the entry point and the few files needed to trace what happens at runtime (keep it cheap - do not read the whole project).',
-    'Describe runtime behavior (what happens when this flow runs), not the import tree.',
-    '',
-    GRAPH_NOTE,
-    'Then write the diagram into project-graph.knowledge.json at the project root (create the file if missing; merge - never wipe other keys), under:',
-    `  flows["${f.name}"] = { "insight": "<2-4 sentences>", "diagram": { "steps": [...], "edges": [...] } }`,
-    flowDiagramSchemaNote(f.name)
-  );
-  return lines.join('\n');
-}
-
-function flowDiagramUpdatePrompt(f) {
-  const ids = f.members.map(m => m[0]);
-  const k = KNOW.flows[f.id] || {};
-  const lines = [
-    `Please verify and update the flow diagram for the "${f.name}" flow if the code has changed since it was authored.`,
-    '',
-    `Flow type: ${f.kind}. Entry point${f.entries.length === 1 ? '' : 's'}: ${f.entries.join(', ')}.`,
-    `Files reached (${ids.length}): ${ids.slice(0, 12).join(', ')}${ids.length > 12 ? ', ...' : ''}.`,
-  ];
-  if (f.desc) lines.push(`Description: ${f.desc}`);
-  if (k.insight) lines.push('', `Current insight: ${k.insight}`);
-  if (k.diagram) {
-    lines.push('', 'Current diagram (from project-graph.knowledge.json):');
-    lines.push(JSON.stringify(k.diagram, null, 2));
-  }
-  lines.push(
-    '',
-    'Re-read the entry point and only files tied to steps that may have changed (keep it cheap - do not read the whole project).',
-    'Compare runtime behavior against the current diagram above:',
-    '- If it still matches, say the diagram is still accurate (no knowledge-file change needed).',
-    '- If steps, branches, labels, or file references are wrong or missing, merge an updated insight and diagram into project-graph.knowledge.json, set "updated" to today, and re-run the project-graph generator.',
-    '',
-    GRAPH_NOTE,
-    flowDiagramSchemaNote(f.name)
-  );
-  return lines.join('\n');
-}
-
 function knowledgeBootstrapPrompt() {
-  const lines = [
-    'Please analyze this project and tell me: (1) which technologies, frameworks and languages it is built with, ' +
-      'and (2) which external services it talks to or exposes (APIs, databases, queues, third-party SaaS, etc).',
-    '',
-    'Be context-efficient: start from manifests (package.json, pyproject.toml, etc), config files, and the most ' +
-      'connected files - do not read the whole project.',
-    '',
-    GRAPH_NOTE,
-    'Then record your findings in project-graph.knowledge.json at the project root (create it if missing; merge - never wipe other keys):',
-    '  { "overview": "<2-4 sentence project summary>",',
-    '    "technologies": [ { "name": "...", "role": "<e.g. web framework>", "detail": "<optional sentence>" } ],',
-    '    "services": [ { "name": "...", "role": "<e.g. database, auth provider>", "detail": "<optional sentence>" } ] }',
-    'Finally re-run the project-graph generator (per the project-graph skill) so the Insights tab shows them.'
-  ];
+  const hasKnowledge = !!(KNOW.overview || KNOW.technologies.length || KNOW.services.length);
+  const lines = hasKnowledge
+    ? [
+        'Please verify and update the project overview, technologies, and services for this project if anything has changed.',
+        '',
+        'Be context-efficient: start from manifests (package.json, pyproject.toml, etc), config files, and the most ' +
+          'connected files - do not read the whole project.',
+        '',
+        'What is already stored in project-graph.knowledge.json:',
+      ]
+    : [
+        'Please analyze this project and tell me: (1) which technologies, frameworks and languages it is built with, ' +
+          'and (2) which external services it talks to or exposes (APIs, databases, queues, third-party SaaS, etc).',
+        '',
+        'Be context-efficient: start from manifests (package.json, pyproject.toml, etc), config files, and the most ' +
+          'connected files - do not read the whole project.',
+        '',
+        GRAPH_NOTE,
+        'Then record your findings in project-graph.knowledge.json at the project root (create it if missing; merge - never wipe other keys):',
+        '  { "overview": "<2-4 sentence project summary>",',
+        '    "technologies": [ { "name": "...", "role": "<e.g. web framework>", "detail": "<optional sentence>" } ],',
+        '    "services": [ { "name": "...", "role": "<e.g. database, auth provider>", "detail": "<optional sentence>" } ] }',
+        knowledgeRegenerateSteps('technologies / services / overview')
+      ];
+  if (hasKnowledge) {
+    if (KNOW.overview) lines.push('', `Overview: ${KNOW.overview}`);
+    if (KNOW.technologies.length) {
+      lines.push('', 'Technologies:', ...KNOW.technologies.map(t => `- ${t.name}${t.role ? ` (${t.role})` : ''}${t.detail ? `: ${t.detail}` : ''}`));
+    }
+    if (KNOW.services.length) {
+      lines.push('', 'Services:', ...KNOW.services.map(s => `- ${s.name}${s.role ? ` (${s.role})` : ''}${s.detail ? `: ${s.detail}` : ''}`));
+    }
+    lines.push(
+      '',
+      'If these entries still match the project, say they are still accurate (no knowledge-file change needed).',
+      'Otherwise merge updates into project-graph.knowledge.json.',
+      knowledgeRegenerateSteps('technologies / services / overview'),
+      '',
+      GRAPH_NOTE
+    );
+  }
   return lines.join('\n');
 }
 
@@ -724,14 +890,24 @@ function filePrompt(n) {
   if (out.length) lines.push(`It imports: ${out.join(', ')}.`);
   if (inc.length) lines.push(`It is used by: ${inc.join(', ')}.`);
   if (flowNames.length) lines.push(`It participates in these flows: ${flowNames.join(', ')}.`);
-  lines.push(
-    '',
-    GRAPH_NOTE,
-    'Explain what this file does, why it matters, and how it fits into the project.',
-    '',
-    KNOWLEDGE_NOTE,
-    `For this file, store a 1-3 sentence note under files["${n.id}"].`
-  );
+  if (KNOW.files[n.id]) {
+    lines.push(
+      '',
+      GRAPH_NOTE,
+      'Re-read this file and verify the note above. If it still matches, say it is still accurate (no knowledge-file change needed).',
+      'If it is wrong or incomplete, merge an updated note under files["' + n.id + '"].',
+      knowledgeRegenerateSteps('file_notes')
+    );
+  } else {
+    lines.push(
+      '',
+      GRAPH_NOTE,
+      'Explain what this file does, why it matters, and how it fits into the project.',
+      '',
+      `For this file, store a 1-3 sentence note under files["${n.id}"].`,
+      knowledgeRegenerateSteps('file_notes')
+    );
+  }
   return lines.join('\n');
 }
 
@@ -746,18 +922,6 @@ document.addEventListener('click', (e) => {
   if (askFlowEl) {
     const f = flowsById.get(askFlowEl.dataset.askflow);
     if (f) { copyText(flowPrompt(f)); flashCopied(askFlowEl); }
-    return;
-  }
-  const askDiagramEl = e.target.closest('[data-askdiagram]');
-  if (askDiagramEl) {
-    const f = flowsById.get(askDiagramEl.dataset.askdiagram);
-    if (f) { copyText(flowDiagramPrompt(f)); flashCopied(askDiagramEl); }
-    return;
-  }
-  const updateDiagramEl = e.target.closest('[data-updatediagram]');
-  if (updateDiagramEl) {
-    const f = flowsById.get(updateDiagramEl.dataset.updatediagram);
-    if (f) { copyText(flowDiagramUpdatePrompt(f)); flashCopied(updateDiagramEl); }
     return;
   }
   const askKnowEl = e.target.closest('[data-askknowledge]');
@@ -775,6 +939,30 @@ document.addEventListener('click', (e) => {
   if (fileEl) { openFile(fileEl.dataset.openfile); return; }
   const flowEl = e.target.closest('[data-openflow]');
   if (flowEl) { selectFlow(flowEl.dataset.openflow); return; }
+  const editorEl = e.target.closest('[data-openeditor]');
+  if (editorEl) { openInEditor(editorEl.dataset.openeditor); return; }
+  const schemeEl = e.target.closest('[data-editor-scheme]');
+  if (schemeEl) {
+    setEditorScheme(schemeEl.dataset.editorScheme);
+    document.querySelectorAll('.editor-scheme-btn').forEach(b => b.classList.toggle('on', b.dataset.editorScheme === schemeEl.dataset.editorScheme));
+    refreshConfigPanel();
+    return;
+  }
+  if (e.target.id === 'project-root-save') {
+    const input = document.getElementById('project-root-input');
+    if (input) setProjectRoot(input.value);
+    refreshConfigPanel();
+    flashCopied(e.target);
+    return;
+  }
+  if (e.target.id === 'project-root-clear') {
+    setProjectRoot('');
+    const input = document.getElementById('project-root-input');
+    if (input) input.value = '';
+    refreshConfigPanel();
+    flashCopied(e.target);
+    return;
+  }
   const locateEl = e.target.closest('[data-locate]');
   if (locateEl) { locateInGraph(locateEl.dataset.locate); return; }
   const focusEl = e.target.closest('[data-flowgraph]');
@@ -937,12 +1125,10 @@ function selectFlow(fid) {
   html += `<div class="sub">${f.members.length} file${f.members.length === 1 ? '' : 's'} reachable from ${f.entries.length} entry point${f.entries.length === 1 ? '' : 's'}</div>`;
   if (f.desc) html += `<p class="desc">${esc(f.desc)}</p>`;
   if (k.insight) html += `<div class="ai-note"><span class="ai-tag">AI insight</span>${esc(k.insight)}</div>`;
+  const flowHasKnowledge = !!(k.insight && k.diagram);
   html += `<div class="drawer-actions" style="margin-bottom:16px">` +
-    `<button class="ask-btn" data-askflow="${esc(fid)}">Copy &amp; ask AI</button>` +
-    (k.diagram
-      ? `<button class="ghost-btn" data-togglediagram="${esc(fid)}">Flow diagram</button>` +
-        `<button class="ghost-btn" data-updatediagram="${esc(fid)}" title="Copies a prompt asking AI to verify and refresh this diagram">Update diagram</button>`
-      : `<button class="ghost-btn" data-askdiagram="${esc(fid)}" title="Copies a prompt asking AI to author this flow's diagram">Ask AI for flow diagram</button>`) +
+    `<button class="ask-btn" data-askflow="${esc(fid)}">${flowHasKnowledge ? 'Copy &amp; update' : 'Copy &amp; explain'}</button>` +
+    (k.diagram ? `<button class="ghost-btn" data-togglediagram="${esc(fid)}">Flow diagram</button>` : '') +
     `<button class="ghost-btn" data-flowgraph="${esc(fid)}">Highlight in graph</button></div>`;
   if (k.diagram) html += `<div class="flow-diagram-wrap" id="flow-diagram-host" style="display:none"></div>`;
   const depths = [...byDepth.keys()].sort((a, b) => a - b);
@@ -1576,6 +1762,34 @@ function barsPanelRows(rows, colorFn, fmt) {
   ).join('');
 }
 
+/* ============ config ============ */
+(function renderConfig() {
+  const grid = document.getElementById('config-grid');
+  if (!grid) return;
+  const detectedRoot = effectiveProjectRoot();
+  grid.innerHTML =
+    `<div class="panel"><h3>Go to file</h3>` +
+    `<p class="config-desc">Choose which editor opens when you click <b>Go to file</b> in the file drawer. Saved in this browser only.</p>` +
+    `<div class="config-actions">` +
+    EDITOR_SCHEMES.map(s =>
+      `<button type="button" class="ghost-btn editor-scheme-btn${s === activeEditorScheme() ? ' on' : ''}" data-editor-scheme="${esc(s)}" style="padding:5px 12px;font-size:0.78rem">${esc(s)}</button>`
+    ).join('') +
+    `</div>` +
+    `<div class="config-status" id="config-editor-status">Active: <code>${esc(activeEditorScheme())}://file/…</code> (${esc(editorSchemeSourceLabel())})</div></div>` +
+
+    `<div class="panel"><h3>Project root</h3>` +
+    `<p class="config-desc">Absolute path used to resolve <b>Go to file</b> links. Auto-detected from where this HTML is opened; override if detection fails.</p>` +
+    `<div class="config-status">Detected (<span id="config-root-source">${esc(projectRootSourceLabel())}</span>):<br>` +
+    `<code id="project-root-display">${esc(detectedRoot || '(not detected — set below)')}</code></div>` +
+    `<div class="config-field"><label for="project-root-input">Override (optional)</label>` +
+    `<input type="text" id="project-root-input" value="${esc(savedProjectRoot())}" placeholder="${esc(projectRootFromPage() || '/path/to/your/project')}" />` +
+    `</div>` +
+    `<div class="config-actions">` +
+    `<button type="button" class="ghost-btn" id="project-root-save" style="padding:5px 12px;font-size:0.78rem">Save root</button>` +
+    `<button type="button" class="ghost-btn" id="project-root-clear" style="padding:5px 12px;font-size:0.78rem">Use auto-detect</button>` +
+    `</div></div>`;
+})();
+
 /* ============ insights ============ */
 (function renderInsights() {
   const M = METRICS;
@@ -1606,16 +1820,26 @@ function barsPanelRows(rows, colorFn, fmt) {
     `<div class="know-item"><b>${esc(t.name)}</b>` +
     (t.role ? `<span class="k-role">${esc(t.role)}</span>` : '') +
     (t.detail ? `<p>${esc(t.detail)}</p>` : '') + `</div>`;
-  const knowEmpty = (what) =>
-    `<div class="empty-note" style="margin-bottom:10px">Not analyzed yet. ${what} are uncovered by AI as you explore: ` +
-    `copy the prompt below into your AI chat and the answer gets baked into the next generation.</div>` +
-    `<button class="ask-btn" data-askknowledge>Copy &amp; ask AI to analyze</button>`;
+  const insightsHasKnowledge = !!(KNOW.overview || KNOW.technologies.length || KNOW.services.length);
 
   let html = '';
-  html += `<div class="panel"><h3>Technologies <span class="ai-tag">AI</span></h3>` +
-    (KNOW.technologies.length ? KNOW.technologies.map(knowItem).join('') : knowEmpty('Technologies')) + '</div>';
-  html += `<div class="panel"><h3>Services <span class="ai-tag">AI</span></h3>` +
-    (KNOW.services.length ? KNOW.services.map(knowItem).join('') : knowEmpty('Services')) + '</div>';
+  html += `<div class="panel"><h3>Project analysis <span class="ai-tag">AI</span></h3>`;
+  if (!insightsHasKnowledge) {
+    html += `<div class="empty-note" style="margin-bottom:10px">Not analyzed yet. Technologies, services, and a project overview are uncovered by AI as you explore: copy the prompt below into your AI chat and the answer gets baked into the next generation as separate panels.</div>`;
+  } else {
+    html += `<div class="empty-note" style="margin-bottom:10px">` +
+      (KNOW.updated ? `Last updated ${esc(KNOW.updated)}. ` : '') +
+      `Use the button below to verify and refresh the overview, technologies, and services panels.</div>`;
+  }
+  html += `<button class="ask-btn" data-askknowledge>${insightsHasKnowledge ? 'Copy &amp; update' : 'Copy &amp; explain'}</button></div>`;
+  if (KNOW.technologies.length) {
+    html += `<div class="panel"><h3>Technologies <span class="ai-tag">AI</span></h3>` +
+      KNOW.technologies.map(knowItem).join('') + '</div>';
+  }
+  if (KNOW.services.length) {
+    html += `<div class="panel"><h3>Services <span class="ai-tag">AI</span></h3>` +
+      KNOW.services.map(knowItem).join('') + '</div>';
+  }
   if (KNOW.notes.length) {
     html += `<div class="panel"><h3>Uncovered insights <span class="ai-tag">AI</span></h3>` +
       KNOW.notes.map(n => `<div class="know-item"><b>${esc(n.topic)}</b><p>${esc(n.body)}</p></div>`).join('') + '</div>';
@@ -1687,8 +1911,9 @@ function barsPanelRows(rows, colorFn, fmt) {
     `<div class="empty-note">Generated ${esc(DATA.generated)} by the project-graph skill.<br>` +
     `Average connections per source file: ${M.avgDeg.toFixed(1)}.<br>` +
     `Living knowledge: ${knowCount ? knowCount + ' AI-authored entr' + (knowCount === 1 ? 'y' : 'ies') + ' merged from project-graph.knowledge.json' : 'none yet'} ` +
-    `- it grows each time you use a "Copy &amp; ask AI" prompt and the agent records what it learned.<br>` +
-    `Regenerate with <code style="background:rgba(255,255,255,0.07);border-radius:5px;padding:1px 5px">python3 generate-graph.py</code></div></div>`;
+    `- it grows each time you use a "Copy &amp; explain" prompt and the agent records what it learned.<br>` +
+    `Regenerate with <code style="background:rgba(255,255,255,0.07);border-radius:5px;padding:1px 5px">python3 &lt;skill&gt;/scripts/generate-graph.py</code> ` +
+    `(see project-graph skill, references/portability.md)</div></div>`;
 
   grid.innerHTML = html;
 })();

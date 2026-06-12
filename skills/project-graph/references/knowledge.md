@@ -5,7 +5,7 @@
 - `project-graph.knowledge.json` at the project root is the graph's living memory: AI-authored, merged into the dashboard on every regeneration.
 - The static script answers "what connects to what"; the knowledge file answers "what is this, what does it use, how does it behave at runtime".
 - It grows incrementally as the user asks questions; the agent records small entries, never bulk-analyzes the whole project.
-- Every "Copy & ask AI" prompt in the dashboard instructs the agent to record findings here and regenerate, closing the loop.
+- Every "Copy & explain" prompt in the dashboard instructs the agent to record findings here and regenerate, closing the loop.
 
 ## File contract
 
@@ -61,16 +61,28 @@ Field rules (the generator validates leniently and drops what it cannot use):
 
 ## Growth protocol
 
-Follow this whenever the user asks about the mapped project (a flow, a file, "what tech does this use", "how does X work"):
+Follow this whenever the user asks about the mapped project (a flow, a file, "what tech does this use", "how does X work"). **The dashboard only updates after regeneration** — saving JSON alone leaves the user staring at stale HTML.
 
 1. Answer the question by investigating only what is needed (see context budget below).
 2. Distill the durable part of the answer into the smallest knowledge entry that captures it: a flow insight, a diagram, a file note, a technology/service entry, or a topic note.
 3. Merge it into `project-graph.knowledge.json` (create the file on first use).
 4. Set `updated` to today's date.
-5. Re-run the generator and verify as usual; the `PROJECT_GRAPH_RESULT` line reports knowledge counts (`technologies`, `services`, `flow_insights`, `flow_diagrams`, `file_notes`, `notes`).
-6. Mention to the user that the dashboard now includes what was uncovered.
+5. **Regenerate immediately** — run `python3 "<path-to-skill>/scripts/generate-graph.py" [project_root]` (resolve path per [portability.md](portability.md); reuse `generator_script` from `PROJECT_GRAPH_RESULT` when available).
+6. **Verify the merge** — exit code `0`, `PROJECT_GRAPH_RESULT` has `"ok": true`, `knowledge.present` true, and `knowledge.total_entries` / the relevant per-type count reflects your addition. If `knowledge.file_on_disk` is true but `present` is false, the JSON is invalid. If warnings mention unmatched flow keys, fix the key to match the dashboard flow name.
+7. Tell the user what was added and ask them to **reload `project-graph.html`** in their browser.
 
-First generation on a project is intentionally basic: generate the graph, then offer to populate the overview, technologies, and services (the dashboard's Insights tab has a "Copy & ask AI to analyze" prompt for exactly this).
+### Common reasons the dashboard looks unchanged
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| JSON updated, HTML unchanged | Generator not re-run after merge | Run `generate-graph.py` and verify `PROJECT_GRAPH_RESULT` |
+| Browser still shows old content | Tab not reloaded | Hard-refresh or reopen `project-graph.html` |
+| `knowledge.present` false | Invalid JSON or root-level shape wrong | Fix JSON; must be a single object |
+| Flow insight missing | Flow key doesn't match dashboard name | Use exact flow name from Flows tab (e.g. `/studio`, not `studio`) |
+| File note missing | Path key wrong or file deleted | Use project-relative path exactly as in the graph |
+| `total_entries` is 0 | Empty entries or all keys dropped | Add non-empty `insight`, `note`, or `overview` |
+
+First generation on a project is intentionally basic: generate the graph, then offer to populate the overview, technologies, and services (the Insights tab's single **Project analysis** card has one "Copy & explain" prompt for exactly this).
 
 ## Context budget
 
@@ -95,7 +107,7 @@ Knowledge must grow without ever requiring a whole-project read:
 
 Diagrams can go stale when code changes. Two ways to keep them current:
 
-**Dashboard (on demand)** — when a flow already has a diagram, the flow detail view shows an "Update diagram" button. It copies a prompt that includes the current insight and diagram JSON and asks the agent to re-verify against the entry point; update only if behavior changed.
+**Dashboard (on demand)** — when a flow already has both an insight and a diagram, the flow detail button becomes "Copy & update". It copies a prompt that includes the current insight and diagram JSON and asks the agent to re-verify against the entry point; update only if behavior changed.
 
 **On regeneration (automatic skill step)** — whenever the skill regenerates the graph and `flow_diagrams` > 0 in the result, before telling the user it is done:
 
