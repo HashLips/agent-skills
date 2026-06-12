@@ -6,6 +6,7 @@
 - Implementation is split into `scripts/project_graph/` (see the package layout table in `SKILL.md`); the CLI script is a thin entry point.
 - Standard library only; requires Python 3.8+.
 - Safe to run on any project: read-only except for the output file.
+- The skill never leaves `scripts/project_graph/__pycache__` behind: bytecode writes are disabled at import time and any existing cache is removed when the CLI exits.
 
 ## Package modules
 
@@ -23,13 +24,17 @@ Useful when an agent needs only part of the pipeline (e.g. rebuild payload after
 
 ## CLI
 
+Run from the skill's `scripts/` directory, or pass the full path to `generate-graph.py` from anywhere:
+
 ```bash
-python3 generate-graph.py [project_root] [-o OUTPUT] [--exclude GLOB]
+python3 "<path-to-skill>/scripts/generate-graph.py" [project_root] [-o OUTPUT] [--exclude GLOB]
 ```
 
-- **project_root** — directory to scan; defaults to the current directory.
+- **project_root** — directory to scan; defaults to the current directory. Prefer an absolute path when cwd is not the codebase root.
 - **-o, --output** — output HTML path; defaults to `<root>/project-graph.html`.
 - **--exclude** — extra glob matched against relative paths; repeatable (for example `--exclude "docs/archive/*"`).
+
+Skill install locations and path resolution: [portability.md](portability.md). Each run prints `generator_script` in `PROJECT_GRAPH_RESULT` so agents can reuse the same entry point on that machine.
 
 ## Privacy rules
 
@@ -71,8 +76,8 @@ python3 generate-graph.py [project_root] [-o OUTPUT] [--exclude GLOB]
 
 ## Output contract
 
-- One HTML file, no external assets, openable directly from disk.
-- Final stdout line: `PROJECT_GRAPH_RESULT {json}` with `ok`, counts, a `knowledge` summary (entry counts per kind), warnings, and any problems; see [self-healing.md](self-healing.md) for the full contract.
+- One HTML file, no external assets, openable directly from disk. The payload does **not** embed an absolute project path (so the HTML is portable across machines and safe to share). **Go to file** resolves the project root at open time from where `project-graph.html` lives (`file://` parent directory, or the served URL path); override in the **Config** tab (saved in `localStorage` on that machine). **Editor scheme** auto-detects the host IDE when the graph is generated (`CURSOR_*` / `VSCODE_*` environment variables), re-checks in the browser when the page is opened inside an IDE preview, and falls back to `EDITOR_SCHEME` in `constants.py`. Override with `--editor-scheme` or the Config tab.
+- Final stdout line: `PROJECT_GRAPH_RESULT {json}` with `ok`, `generator_script`, counts, a `knowledge` summary (entry counts per kind), warnings, and any problems; see [self-healing.md](self-healing.md) for the full contract.
 - Exit codes: 0 verified success, 1 bad arguments, 2 generation crashed, 3 failed self-verification.
 
 ## Troubleshooting

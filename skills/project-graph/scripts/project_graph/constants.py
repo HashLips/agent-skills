@@ -3,6 +3,10 @@ import re
 OUTPUT_NAME = "project-graph.html"
 FLOWS_MANIFEST = "project-graph.flows.json"
 KNOWLEDGE_FILE = "project-graph.knowledge.json"
+# Default URI scheme for "Go to file" in the dashboard drawer.
+# Common values: vscode (VS Code and most forks), cursor, vscodium, wsl.
+EDITOR_SCHEME = "vscode"
+EDITOR_SCHEMES = ("vscode", "cursor", "vscodium", "wsl")
 MAX_PARSE_BYTES = 1_500_000
 MAX_AUTO_FLOWS = 200
 

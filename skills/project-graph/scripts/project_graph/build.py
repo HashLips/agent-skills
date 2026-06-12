@@ -10,7 +10,8 @@ from pathlib import Path, PurePosixPath
 from typing import Dict, List, Set, Tuple
 
 from .categorize import categorize
-from .constants import LANG_BY_EXT, MAX_PARSE_BYTES
+from .constants import EDITOR_SCHEMES, LANG_BY_EXT, MAX_PARSE_BYTES
+from .editor_detect import detect_editor_scheme
 from .discovery import discover_files
 from .flows import detect_auto_flows, expand_flows, load_manifest_flows
 from .knowledge import load_knowledge, match_flow_knowledge
@@ -40,7 +41,11 @@ def project_name(root: Path) -> str:
     return root.resolve().name
 
 
-def build_payload(root: Path, excludes: List[str]) -> Tuple[Dict[str, object], List[str]]:
+def build_payload(
+    root: Path,
+    excludes: List[str],
+    editor_scheme: str | None = None,
+) -> Tuple[Dict[str, object], List[str]]:
     rel_files = discover_files(root, excludes)
     node_set = set(rel_files)
     aliases = load_ts_aliases(root)
@@ -141,9 +146,16 @@ def build_payload(root: Path, excludes: List[str]) -> Tuple[Dict[str, object], L
         for (s, t), kinds in sorted(edge_map.items())
     ]
 
+    detected_scheme, detected_from = detect_editor_scheme()
+    scheme = editor_scheme or detected_scheme
+    scheme_source = "cli" if editor_scheme else detected_from
+
     return {
         "generated": datetime.date.today().isoformat(),
         "project": project_name(root),
+        "editorScheme": scheme,
+        "editorSchemes": list(EDITOR_SCHEMES),
+        "editorDetectedFrom": scheme_source,
         "nodes": nodes,
         "edges": edges,
         "flows": flows,
