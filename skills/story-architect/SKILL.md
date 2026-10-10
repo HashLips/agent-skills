@@ -1,85 +1,97 @@
 ---
 name: story-architect
-description: Converts fictional world ideas into structured lore records with correct classification, schema, naming, and canon-safe progressive enrichment behavior. Use when a creator describes new lore concepts, asks to organize or expand a world repository, or needs consistent entries for world, regions, rules, inhabitants, artifacts, phenomena, cultures, symbols, myths, stories, or artworks.
+description: Converts fictional world ideas into classified lore files with canon-safe enrichment, and keeps each world's own rules in that world's repo. Use when a creator describes new lore, organizes or expands a world, or asks to remember how that world should be written.
 ---
 
 # Story Architect
 
-You are the Story Architect of a fictional universe.
-Your role is to help the creator design, organize, and expand a fictional world using structured markdown files.
-The universe is stored as a repository where each concept is represented by a markdown file. You act as an intelligent archivist and architect of canon.
-
 ## Summary
 
-- Convert creator ideas into structured lore entries.
-- Classify concepts consistently and place files in correct folders.
-- Preserve canon while allowing safe metadata enrichment.
-
-## Core Responsibilities
-
-- interpret creator ideas
-- classify each concept correctly
-- generate structured markdown files in the correct folder
-- keep lore consistent with existing canon
-- follow schema, naming, and templates
-- protect existing canon while allowing safe metadata enrichment
+- Turn each idea into one markdown file per concept.
+- Classify, name, and place the file from the schema and category guide.
+- Keep established canon. Fill only missing metadata when new canon arrives.
+- Read this world's `AGENTS.md` before writing. If it is silent, use these defaults and continue.
+- Store standing preferences in that repo's `agent/` folder.
 
 ## Core Workflow
 
-When the creator describes a world idea, always do this:
+When the creator describes a world idea:
 
-1. understand what the idea represents
-2. run canon check against related entries
-3. classify the concept
-4. decide if one or multiple files are needed
-5. ask minimal targeted questions only if needed
-6. generate file(s) using required schema and templates
-7. enrich existing files when newly provided canon fills missing metadata
+1. Read root `AGENTS.md` and the `agent/` files it lists. If they are absent, use skill defaults.
+2. Understand what the idea represents.
+3. Run a canon check against related entries. If `agent/canon-safety.md` exists, follow it.
+4. Classify the concept with the built-in categories, then any category registered in `agent/categories.md`.
+5. Decide whether one file or several files are needed.
+6. Ask one minimal question only when classification or a required field is unclear.
+7. Generate the file or files from the schema and templates. Set `time_era` and `time_span` on every entry. Reuse an era label the repo already uses when one fits.
+8. Enrich existing files when new canon fills missing metadata.
+9. When the creator asks to remember a way of working, write it under `agent/` and index it from `AGENTS.md`.
+
+World-kit behavior: [references/world-kit.md](references/world-kit.md).
 
 ## Non-Negotiable Rules
 
+### Scope Rule
+
+Write lore and house rules into the world repository. Register a new category only when the creator wants that kind of entry. Take facts, era lists, and external IDs from the creator or from existing entries. Keep this world's preferences out of this skill.
+
+### World Kit Rule
+
+Recorded preferences win over skill defaults. A missing preference does not block the task. Standing preferences are written into the repo, not left in chat. See [references/world-kit.md](references/world-kit.md).
+
 ### Classification Rule
 
-Infer the correct category even when unspecified. Use the canonical category definitions and decision guide in [references/categories.md](references/categories.md).
+Infer the category when the creator does not name one. Use [references/categories.md](references/categories.md), then categories registered for this world.
 
 ### Multi-Concept Rule
 
-If one prompt describes multiple concepts, create multiple files (one concept per file).
+When one prompt describes several concepts, create one file per concept.
 
 ### Gap Question Rule
 
-Ask only minimal, targeted questions when classification or required fields are unclear.
+Ask only a minimal, targeted question when classification or a required field is unclear.
 
 ### Canon Check Rule
 
-Run canon checks before creating entries and report conflicts using canon-safe status framing. See [references/canon-rules.md](references/canon-rules.md).
+Run canon checks before creating entries. Report conflicts with canon-safe status framing. See [references/canon-rules.md](references/canon-rules.md).
+
+### Link Rule
+
+Each `related` value matches another entry's `name` exactly. After edits, fix or report names that do not resolve.
 
 ### Progressive Enrichment Rule
 
-When the creator provides new canonical details, update existing entries to fill missing metadata or placeholders across all schema and template-defined metadata fields (examples include `culture`, `themes`, `status`, `region`, `parent_region`, `related`, `scope`, `artifact_type`, `nature`, `story_type`, `medium`, `edition`, `year`, and `based_on`).
+When the creator supplies new canonical details, fill empty, unknown, or placeholder metadata on existing entries.
 
-Safe enrichment behavior:
+- Update only fields that are empty, unknown, or clearly placeholders.
+- Keep established canon unless the creator asks for a revision.
+- Ask a targeted question when more than one value is plausible.
+- Add new values onto `related` and `themes`.
 
-- only update fields that are empty, unknown, or clearly placeholders
-- keep existing established canon unless the creator explicitly requests a revision
-- ask a targeted question only when multiple plausible values exist
-- prefer additive list updates for `related` and `themes` over replacement
-
-See full canon behavior in [references/canon-rules.md](references/canon-rules.md).
+See [references/canon-rules.md](references/canon-rules.md).
 
 ## Output Contract
 
-- **Structure:** Use the required frontmatter schema from [references/schema.md](references/schema.md).
-- **Templates:** Use category-specific templates from [references/file-templates.md](references/file-templates.md).
-- **Naming:** Use lowercase kebab case from [references/naming-conventions.md](references/naming-conventions.md).
-- **Placement:** Put files in the correct category folders using the flat structure defined in [references/hierarchy.md](references/hierarchy.md).
-- **Status:** Every entry must set a canon status defined in [references/canon-rules.md](references/canon-rules.md).
+- **Structure:** Use the frontmatter schema in [references/schema.md](references/schema.md).
+- **Templates:** Use the category templates in [references/file-templates.md](references/file-templates.md).
+- **Naming:** Use lowercase kebab-case from [references/naming-conventions.md](references/naming-conventions.md).
+- **Placement:** Use the flat folders in [references/hierarchy.md](references/hierarchy.md), plus folders registered in `agent/categories.md`.
+- **Status:** Set a canon status from [references/canon-rules.md](references/canon-rules.md).
+- **Time:** Set `time_era` and `time_span` on every entry.
+- **Definition:** The opening section (Overview, Summary, or Premise) states what the thing is, what it does, and what it is not.
 
 ## Reference Index
 
-- Frontmatter schema and required fields for lore entries: [references/schema.md](references/schema.md)
-- Category definitions and classification decision guide: [references/categories.md](references/categories.md)
-- Naming conventions for files and entities (kebab case rules): [references/naming-conventions.md](references/naming-conventions.md)
-- Category-specific file templates for different concept types: [references/file-templates.md](references/file-templates.md)
-- Canon rules, status values, and conflict-handling behavior: [references/canon-rules.md](references/canon-rules.md)
-- Folder hierarchy and placement rules for lore files: [references/hierarchy.md](references/hierarchy.md)
+- **World kit:** how a world sets categories, time, links, and house rules: [references/world-kit.md](references/world-kit.md)
+- **Schema:** frontmatter fields and where each one applies: [references/schema.md](references/schema.md)
+- **Categories:** built-in types and how to classify a concept: [references/categories.md](references/categories.md)
+- **Naming:** kebab-case file names: [references/naming-conventions.md](references/naming-conventions.md)
+- **Templates:** category file shapes: [references/file-templates.md](references/file-templates.md)
+- **Canon:** status values, conflicts, and safe enrichment: [references/canon-rules.md](references/canon-rules.md)
+- **Hierarchy:** flat folders and place nesting: [references/hierarchy.md](references/hierarchy.md)
+
+## When To Use This Skill
+
+- A creator describes a new lore concept, or several at once.
+- A creator asks to organize, expand, or keep a fictional world consistent.
+- A creator asks the agent to remember how this world should be written from now on.

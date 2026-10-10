@@ -1,4 +1,14 @@
-# World Template
+# File Templates
+
+## Summary
+
+- Category templates for new lore files.
+- Every template includes `time_era` and `time_span`.
+- Era names follow `agent/timeline.md` when that file exists. Span is `point`, `ongoing`, or `recurring`.
+- Registered categories without a template here still use this frontmatter shape plus fields listed in `agent/categories.md`.
+- Artwork `Role` covers how the work exists, inside the fiction or outside it.
+
+## World Template
 
 ---
 category: world
@@ -6,6 +16,8 @@ name:
 related:
 themes:
 status:
+time_era:
+time_span:
 ---
 
 ## Name
@@ -30,6 +42,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 ---
 
 ## Name
@@ -54,6 +68,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 scope:
 ---
 
@@ -77,6 +93,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 nature:
 ---
 
@@ -103,6 +121,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 ---
 
 ## Name
@@ -127,6 +147,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 ---
 
 ## Name
@@ -150,6 +172,8 @@ region:
 related:
 themes:
 status:
+time_era:
+time_span:
 ---
 
 ## Name
@@ -174,6 +198,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 ---
 
 ## Name
@@ -198,6 +224,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 ---
 
 ## Name
@@ -218,6 +246,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 story_type:
 ---
 
@@ -239,6 +269,8 @@ culture:
 related:
 themes:
 status:
+time_era:
+time_span:
 medium:
 edition:
 year:
@@ -251,7 +283,7 @@ based_on:
 
 ## Description
 
-## Real-World Role
+## Role
 
 ## Lore Connection
 

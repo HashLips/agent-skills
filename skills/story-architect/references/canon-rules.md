@@ -2,9 +2,16 @@
 
 ## Summary
 
-- Defines canonical guidance for this reference area.
-- Use this file to keep story-architect outputs consistent and canon-safe.
+- Existing entries stay in place unless the creator asks for a revision.
+- Empty and placeholder fields can be filled when new canon arrives.
+- A conflict keeps the existing value and takes a status such as `myth`, `rumor`, or `contradicted`.
 
+
+## World limits
+
+If `agent/canon-safety.md` exists, read it before creating or enriching entries. It records what this world must not casually solve. Skill status framing still applies.
+
+If `agent/reference-map.yaml` lists a file, that file is protected. On rename, move, or delete, update the map in the same change. Never reuse an ID.
 
 ## Canon Integrity
 
@@ -34,9 +41,18 @@ Guardrails:
 ## Conflict Handling
 
 When a new idea conflicts with canon:
+
 - report the conflict
 - preserve existing records
 - resolve with framing (for example `myth`, `rumor`, or `contradicted`) instead of rewriting canon
+
+## Plain definition
+
+The opening section (Overview, Summary, or Premise) states what the thing is, what it does, and what it is not. Unknowns stay labeled as unknown. Lead with that operating fact, then any atmosphere.
+
+## Exact links
+
+`related` values match another entry's `name` field exactly. After a batch of edits, report names that do not resolve.
 
 ## Allowed Status Values
 
