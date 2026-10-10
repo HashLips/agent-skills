@@ -2,9 +2,9 @@
 
 ## Summary
 
-- Defines canonical guidance for this reference area.
-- Use this file to keep story-architect outputs consistent and canon-safe.
-
+- Use these built-in categories unless the world registers another.
+- Choose the category that matches the concept's main job.
+- A new kind of entry gets its own folder in the world kit.
 
 Use this section to both identify a category and understand what it represents.
 
@@ -28,9 +28,11 @@ Classify as `rule` when the concept explains how the world consistently works.
 
 ## inhabitant
 
-Defines a being, species, creature, or entity.
+Defines who exists in the world.
 
-Classify as `inhabitant` when the concept centers on who exists in the world.
+Classify as `inhabitant` for a people, a species, a creature, or a named individual.
+
+When the creator wants those split, register the narrower category in the world kit.
 
 ## artifact
 
@@ -40,7 +42,7 @@ Classify as `artifact` for crafted objects, tools, relics, currency, or document
 
 ## phenomenon
 
-Defines a recurring natural or supernatural occurrence.
+Defines a recurring occurrence in the world.
 
 Classify as `phenomenon` when the concept is an event pattern rather than an object, place, or person.
 
@@ -70,6 +72,23 @@ Classify as `story` for scene-like narratives, historical episodes, or storytell
 
 ## artwork
 
-Defines a real-world artwork connected to the world.
+Defines a creative work tied to the world.
 
-Classify as `artwork` when the concept is an external creative work (for example image, print, piece, edition) tied to lore.
+Classify as `artwork` for a made work such as an image, song, text, print, or edition. The work may exist inside the fiction, outside it, or both.
+
+Use `artifact` when people use the object and the work itself is not the point.
+
+## Registered categories
+
+Built-in categories are the default set above.
+
+When the creator wants a new kind of entry, register it in `agent/categories.md` and classify into that folder from then on. See [world-kit.md](world-kit.md).
+
+A registered category needs:
+
+- a flat folder name
+- a one-line rule for when a concept belongs there
+- any extra frontmatter fields
+- when the world entry lists members of this category, add new names there
+
+Give the new concept its own folder. The built-in set is a starting ontology, not a closed list.

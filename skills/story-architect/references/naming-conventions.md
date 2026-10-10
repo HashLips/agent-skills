@@ -2,21 +2,21 @@
 
 ## Summary
 
-- Defines canonical guidance for this reference area.
-- Use this file to keep story-architect outputs consistent and canon-safe.
+- File names are lowercase kebab-case.
+- The name identifies one concept.
+- A name that could apply to any file in the folder is too vague.
 
-
-All files must use lowercase kebab case.
+All files must use lowercase kebab-case.
 
 Example:
 
-- floating-sky.md
-- ashen-harbor.md
-- sky-unit-currency.md
+- outer-sea.md
+- port-city.md
+- trade-coin.md
 
 Names must be descriptive and represent one concept.
 
-Avoid generic names like:
+Avoid names that hide the concept:
 
 - artifact.md
 - story.md

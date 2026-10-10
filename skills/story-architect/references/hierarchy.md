@@ -2,13 +2,13 @@
 
 ## Summary
 
-- Defines canonical guidance for this reference area.
-- Use this file to keep story-architect outputs consistent and canon-safe.
-
+- One flat folder per category.
+- Places nest through fields, not subfolders.
+- `agent/` holds instructions. Lore stays in category folders.
 
 Use a flat, minimal folder structure.
 
-World entries must live in these folders:
+World entries must live in these folders unless `agent/categories.md` registers more:
 
 - world/
 - regions/
@@ -22,8 +22,12 @@ World entries must live in these folders:
 - stories/
 - artworks/
 
+Also place files in any folder registered in `agent/categories.md`.
+
+`agent/` is for instructions, plans, and maps. It is not a lore category.
+
 Do not create category subfolders by default.
-Place files directly in their category folder (for example `artifacts/sky-unit-currency.md`).
+Place files directly in their category folder (for example `artifacts/trade-coin.md`).
 
 ## Region Hierarchy
 
@@ -36,10 +40,10 @@ Use:
 
 Example:
 
-Floating Sky
-└ Lower Drift State
-  └ Ashen Harbor
-    └ Quiet Cup
+Outer Sea
+└ Northern Coast
+  └ Port City
+    └ Market Hall
 
 Place types may include:
 
