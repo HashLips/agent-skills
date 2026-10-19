@@ -1,6 +1,6 @@
 ---
 name: project-relay
-description: Tracks intent, decisions, and handoffs in .project whenever this repository, its code, or other source material changes. Use before and after any edit to the repo. First check whether .project exists. If it does not, bootstrap it before continuing. If it does, update intent when the goal changes and record the decisions later work must follow.
+description: Tracks intent, decisions, and handoffs in .project when this repository's code or other source material changes. Use before that work. First check whether .project exists. If it does not, bootstrap it before continuing. If it does, update intent when the goal changes and record the decisions later work must follow. A commit or push is not a reason to write these files. After a commit or push, leave the tree as it is.
 license: MIT
 compatibility: Works with any agent that can read and edit project files.
 metadata:
@@ -16,15 +16,16 @@ Maintain one durable, agent-independent source of project intent, decisions, act
 
 ## Non-Negotiable Rules
 
-1. **Start with Relay.** Before other work in the repository, look for `.project/` and the Relay block in `AGENTS.md`. If either is missing, bootstrap. If both exist, read them and keep the tracking files current as the work changes. Do not skip this step, and do not start a second tracking system. The `AGENTS.md` block is the standing order that tells the next agent to do the same.
+1. **Start with Relay.** Before other work in the repository, look for `.project/` and the Relay block in `AGENTS.md`. If either is missing, bootstrap. If both exist, read them and keep the tracking files current as the work changes. Do not skip this step, and do not start a second tracking system. The `AGENTS.md` block is the standing order that tells the next agent to do the same. A commit or push does not start this update.
 2. **Bootstrap safely.** At the intended project root, create missing Relay files and the `AGENTS.md` integration. Never reset, truncate, replace, or delete existing project content. If initialization cannot be performed, explain the blocker and provide the exact proposed changes.
 3. **Read before acting.** Inspect `AGENTS.md`, `.project/NOW.md`, `.project/INTENT.md`, the relevant active task, and only the decisions needed for the task. Reconcile the snapshot with the repository and accessible Git state before trusting it.
 4. **Validate continuity.** After bootstrap and before the final handoff, run the continuity check in [references/lifecycle.md](references/lifecycle.md). Fix structural problems. A clean check is not proof the implementation works.
 5. **Never fabricate progress.** Label facts as observed, reported, planned, or unverified. Never represent an unrun test, remote-only view, or prior agent claim as verified.
-6. **Update at meaningful boundaries, not per message.** Update `INTENT.md` when the goal, audience, scope, or a constraint actually changes. Record a decision only when a later agent would choose wrong without it. Update tasks when scope, implementation, blockers, or validation changes. Refresh `NOW.md` so it matches the current intent and the decisions still in force. Keep both files short.
-7. **Archive tasks; compact old decisions.** Move accepted and verified tasks from `tasks/active/` to `tasks/done/`. Keep task IDs and evidence. When `DECISIONS.md` grows past about 120 lines, compact superseded decisions, and accepted decisions that no longer affect the work, down to one line each. Keep every decision ID. Do not silently complete work or remove task files.
-8. **Respect permissions and conflicts.** Do not commit, push, merge, deploy, install integrations, or run destructive commands without authorization. Detect concurrent edits and discrepancies; preserve both sides and request a resolution rather than overwriting.
-9. **Do not store secrets or personal data.** `.project/` records where the project is and what it is trying to do. Never write secret keys, credentials, tokens, raw environment values, private chat transcripts, or personal data into these files.
+6. **Update at meaningful boundaries, not per message.** Update `INTENT.md` when the goal, audience, scope, or a constraint actually changes. Record a decision only when a later agent would choose wrong without it. Update tasks when scope, implementation, blockers, or validation changes. Refresh `NOW.md` so it matches the current intent and the decisions still in force. Keep both files short. A commit, push, or sync to GitHub is not one of these updates.
+7. **Stop after a commit.** When the user asks to commit or push, or when a commit or push has just happened, do not edit `.project/` or the Relay block afterward. Do not record that the commit happened in intent, decisions, or `NOW.md`. Leave any uncommitted Relay edits out of that follow-up. The tree stays as the commit left it.
+8. **Archive tasks; compact old decisions.** Move accepted and verified tasks from `tasks/active/` to `tasks/done/`. Keep task IDs and evidence. When `DECISIONS.md` grows past about 120 lines, compact superseded decisions, and accepted decisions that no longer affect the work, down to one line each. Keep every decision ID. Do not silently complete work or remove task files.
+9. **Respect permissions and conflicts.** Do not commit, push, merge, deploy, install integrations, or run destructive commands without authorization. Detect concurrent edits and discrepancies; preserve both sides and request a resolution rather than overwriting.
+10. **Do not store secrets or personal data.** `.project/` records where the project is and what it is trying to do. Never write secret keys, credentials, tokens, raw environment values, private chat transcripts, or personal data into these files.
 
 ## Workflow
 
@@ -57,6 +58,7 @@ Maintain one durable, agent-independent source of project intent, decisions, act
 3. Rewrite `NOW.md` as a compact, accurate current snapshot: goal, active task pointers, verified state, blockers, next action, handoff provenance, and visibility limits. Remove stale completed work from the active snapshot, not from history.
 4. Compare files against their pre-write state to avoid lost updates. If concurrent work changed the same file, reconcile or stop instead of clobbering it.
 5. Run the continuity check, resolve any consistency errors, then tell the user what changed, what was validated, where the work lives, and what remains. Never imply a commit or synchronization occurred unless confirmed.
+6. Do this recording before a requested commit, never after one. If the user asked only to commit or push, skip the recording and leave the files untouched.
 
 ## Working set
 
@@ -81,7 +83,8 @@ Load a reference only when that operation is needed.
 
 ## When To Use This Skill
 
-- Before or after any change to this repository, its code, or other source material.
-- When `.project/` is missing, so it is bootstrapped before the work continues.
+- Before a change to this repository's code or other source material.
+- When `.project/` is missing, so it is bootstrapped before that work continues.
 - When `.project/` already exists, so intent and decisions stay current.
 - When resuming in another agent, completing work, or handing off.
+- A request to commit or push is not a trigger to update these files.

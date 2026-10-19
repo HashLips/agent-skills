@@ -13,7 +13,7 @@ Keep approximately 30–80 lines where practical. Include:
 - **Updated:** timestamp in ISO 8601 with timezone where known.
 - **Objective:** one clear sentence, or `Not established`.
 - **Active tasks:** links to actual task files, or `None`.
-- **Observed state:** what the current agent actually examined, including branch/commit if available.
+- **Observed state:** what the current agent actually examined. A commit or push is not an observed-state update.
 - **Verification:** passed/failed/not run/unavailable for relevant checks, with evidence where available.
 - **Blockers or discrepancies:** exact uncertainty and impact.
 - **Next action:** one actionable step; additional steps only if needed.

@@ -18,12 +18,13 @@ Work may move backward when regressions or changed requirements are discovered. 
 4. Remove its pointer from the active section of `NOW.md`. Preserve consequential reasoning in `DECISIONS.md`; keep history in the completed task.
 5. Set the next objective from remaining active tasks. Do not fabricate the next task simply to keep work moving.
 6. Check the final diff for accidental removals and unrelated changes. Do not stage, commit, push, or deploy without authorization.
+7. When the user asks to commit or push, stop once that git operation finishes. Do not update `INTENT.md`, `DECISIONS.md`, `NOW.md`, or task files afterward, and do not record the commit itself as a decision or an intent change.
 
 ## Handing off between tools
 
 Before a handoff, summarize in `NOW.md`:
 
-- Precisely which project, branch, commit, and accessible worktree were inspected.
+- Which project and worktree were inspected. Do not add an entry just because something was committed or pushed.
 - Completed vs incomplete changes, with paths and task IDs.
 - Validation that **actually** ran (and what did not).
 - Relevant local modifications not synchronized to the source the next agent can access.
