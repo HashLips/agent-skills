@@ -50,7 +50,7 @@ Run this after bootstrap and before a handoff. Fix every structural problem befo
 - `AGENTS.md`, `.project/INTENT.md`, `.project/NOW.md`, and `.project/DECISIONS.md` exist and are normal files.
 - `.project/tasks/active/` and `.project/tasks/done/` exist and are normal directories.
 - None of those managed paths is a symlink.
-- `AGENTS.md` contains exactly one `<!-- project-relay:start -->` and one `<!-- project-relay:end -->`, with the start marker first.
+- `AGENTS.md` contains exactly one `<!-- intent-replay:start -->` and one `<!-- intent-replay:end -->`, with the start marker first.
 - Every task file is named `TASK-0000-short-slug.md`, with at least four digits and a lowercase slug.
 - Each task ID appears once across `active/` and `done/`.
 - A file in `active/` does not have status `done`.
